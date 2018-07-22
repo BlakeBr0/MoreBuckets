@@ -28,8 +28,15 @@ minecraft {
     makeObfSourceJar = false
 }
 
-dependencies {
+repositories {
+    maven {
+        url = "http://dvs1.progwml6.com/files/maven"
+    }
+}
 
+dependencies {
+    deobfCompile "mezz.jei:jei_1.12.2:4.10.0.198:api"
+    runtime "mezz.jei:jei_1.12.2:4.10.0.198"
 }
 
 processResources {

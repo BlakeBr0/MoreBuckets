@@ -22,8 +22,8 @@ public class MoreBuckets {
 	public static final ModRegistry REGISTRY = ModRegistry.create(MOD_ID);
 	public static final CreativeTabs CREATIVE_TAB = new MBCreativeTab();
 	
-	@SidedProxy(clientSide = "com.blakebr0.morebuckets.ClientProxy",
-				serverSide = "com.blakebr0.morebuckets.ServerProxy")
+	@SidedProxy(clientSide = "com.blakebr0.morebuckets.proxy.ClientProxy",
+				serverSide = "com.blakebr0.morebuckets.proxy.ServerProxy")
 	public static CommonProxy proxy;
 	
 	@EventHandler

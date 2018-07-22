@@ -5,7 +5,7 @@
   "description": "Adds a bunch of new buckets.",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://minecraft.curseforge.com/projects/more-buckets",
   "updateUrl": "",
   "authorList": ["BlakeBr0"],
   "credits": "thorgot on MCF for Diamond Buckets+.",
