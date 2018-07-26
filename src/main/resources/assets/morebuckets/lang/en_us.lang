@@ -1,0 +1,10 @@
+# CREATIVE TAB
+itemGroup.morebuckets=More Buckets
+
+# ITEMS
+item.morebuckets.copper_bucket.name=Copper Bucket
+item.morebuckets.silver_bucket.name=Silver Bucket
+
+# TOOLTIPS
+tooltip.morebuckets.empty=Empty
+tooltip.morebuckets.buckets=%s/%s - %s
