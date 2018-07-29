@@ -16,8 +16,8 @@ public class ModItems {
 	public static ItemMoreBucket itemSteelBucket = new ItemMoreBucket("steel_bucket", 4000);
 	public static ItemMoreBucket itemEmeraldBucket = new ItemMoreBucket("emerald_bucket", 5000);
 	public static ItemMoreBucket itemDiamondBucket = new ItemMoreBucket("diamond_bucket", 6000);
-	
-	public static void init(ModRegistry registry) {	
+
+	public static void init(ModRegistry registry) {
 		registry.register(itemAluminumBucket, "aluminum_bucket");
 		registry.register(itemCopperBucket, "copper_bucket");
 		registry.register(itemTinBucket, "tin_bucket");
