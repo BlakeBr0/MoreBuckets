@@ -18,4 +18,8 @@ public class BucketUtils {
 	public static EnumRarity getFluidRarity(FluidStack fluid) {
 		return fluid.getFluid().getRarity();
 	}
+	
+	public static int toBuckets(int i) {
+		return i - (i % 1000);
+	}
 }

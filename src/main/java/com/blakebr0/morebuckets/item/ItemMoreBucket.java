@@ -190,16 +190,17 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 		FluidStack bucketFluid = this.getFluid(stack);
 		if (bucketFluid != null && !fluid.isFluidEqual(bucketFluid)) 
 			return 0;
+		
+		int capacity = this.getCapacity(stack);
 
 		if (!canFill) {
 			if (bucketFluid == null)
-				return Math.min(capacity, fluid.amount);
+				return BucketUtils.toBuckets(Math.min(capacity, fluid.amount));
 			
-			return Math.min(capacity - bucketFluid.amount, fluid.amount);
+			return BucketUtils.toBuckets(Math.min(capacity - bucketFluid.amount, fluid.amount));
 		}
 		
-		int capacity = this.getCapacity(stack);	
-		int filled = Math.min(fluid.amount, capacity);
+		int filled = BucketUtils.toBuckets(Math.min(fluid.amount, capacity));
 		
 		if (bucketFluid == null) {
 			NBTTagCompound fluidTag = fluid.writeToNBT(new NBTTagCompound());
@@ -209,11 +210,12 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 			return filled;
 		}
 			
-		filled = capacity - fluid.amount;
+		filled = BucketUtils.toBuckets(capacity - bucketFluid.amount);
+		int amount = BucketUtils.toBuckets(fluid.amount);
 
-		if (fluid.amount < filled) {
-			bucketFluid.amount += fluid.amount;
-			filled = fluid.amount;
+		if (amount < filled) {
+			bucketFluid.amount += amount;
+			filled = amount;
 		} else {
 			bucketFluid.amount = capacity;
 		}
@@ -232,7 +234,7 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 		FluidStack fluid = this.getFluid(stack);
 		if (fluid == null) return null;
 		
-		int drained = Math.min(fluid.amount, amount);
+		int drained = BucketUtils.toBuckets(Math.min(fluid.amount, amount));
 
 		if (canDrain) {
 			if (amount >= fluid.amount) {
