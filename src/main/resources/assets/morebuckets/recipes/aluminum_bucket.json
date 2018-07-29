@@ -1,0 +1,23 @@
+{
+	"conditions": [
+		{
+			"type": "minecraft:item_exists",
+			"item": "morebuckets:diamond_bucket"
+		}
+	],
+	"type": "forge:ore_shaped",
+	"pattern": [
+		"M M",
+		" M "
+	],
+	"key": {
+		"M": {
+			"type": "forge:ore_dict",
+			"ore": "ingotAluminum"
+		}
+	},
+	"result": {
+		"item": "morebuckets:diamond_bucket",
+		"data": 0
+	}
+}
