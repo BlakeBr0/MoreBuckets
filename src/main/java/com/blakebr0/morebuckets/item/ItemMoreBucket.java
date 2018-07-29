@@ -185,28 +185,41 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 
 	@Override
 	public int fill(ItemStack stack, FluidStack fluid, boolean canFill) {
+		NBTHelper.validateCompound(stack);
+		
 		FluidStack bucketFluid = this.getFluid(stack);
 		if (bucketFluid != null && !fluid.isFluidEqual(bucketFluid)) 
 			return 0;
+
+		if (!canFill) {
+			if (bucketFluid == null)
+				return Math.min(capacity, fluid.amount);
+			
+			return Math.min(capacity - bucketFluid.amount, fluid.amount);
+		}
 		
-		int capacity = this.getCapacity(stack);
+		int capacity = this.getCapacity(stack);	
 		int filled = Math.min(fluid.amount, capacity);
-
-		if (canFill) {
-			if (bucketFluid == null) {
-				NBTTagCompound fluidTag = fluid.writeToNBT(new NBTTagCompound());
-				fluidTag.setInteger("Amount", filled);
-				stack.setTagCompound(fluidTag);
-
-				return filled;
-			}
+		
+		if (bucketFluid == null) {
+			NBTTagCompound fluidTag = fluid.writeToNBT(new NBTTagCompound());
+			fluidTag.setInteger("Amount", filled);
+			stack.setTagCompound(fluidTag);
 			
-			filled = Math.min(fluid.amount + bucketFluid.amount, capacity);
+			return filled;
+		}
 			
-			bucketFluid.amount = filled;
-			bucketFluid.writeToNBT(stack.getTagCompound());
+		filled = capacity - fluid.amount;
+
+		if (fluid.amount < filled) {
+			bucketFluid.amount += fluid.amount;
+			filled = fluid.amount;
+		} else {
+			bucketFluid.amount = capacity;
 		}
 
+		bucketFluid.writeToNBT(stack.getTagCompound());
+		
 		return filled;
 	}
 
