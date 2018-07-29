@@ -5,7 +5,7 @@
       "model": "forge:forgebucket",
       "textures": {
         "base": "morebuckets:items/bronze_bucket",
-        "fluid": "forge:items/bucket_fluid",
+        "fluid": "morebuckets:items/bucket_fluid",
         "cover": "morebuckets:items/bronze_bucket_overlay"
       },
       "transform": "forge:default-item",
