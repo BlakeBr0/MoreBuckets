@@ -15,6 +15,7 @@ import com.blakebr0.morebuckets.lib.IFluidHolder;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
@@ -79,7 +80,13 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
     	int capacity = this.getCapacity(stack) / 1000;
     	int buckets = BucketUtils.getFluidAmount(stack) / 1000;
     	FluidStack fluid = this.getFluid(stack);
+    	
     	String fluidName = fluid == null ? Utils.localize("tooltip.morebuckets.empty") : fluid.getLocalizedName();
+    	
+    	if (fluid != null && BucketUtils.getFluidRarity(fluid) != EnumRarity.COMMON) {
+    		fluidName = BucketUtils.getFluidRarity(fluid).rarityColor.toString() + fluidName;
+    	}
+    	
     	tooltip.add(Utils.localize("tooltip.morebuckets.buckets", buckets, capacity, fluidName));
     }
 
