@@ -49,12 +49,16 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 
 	@Override
 	public boolean hasContainerItem(ItemStack stack) {
-		return false;
+		return BucketUtils.getFluidAmount(stack) > 0;
 	}
 
 	@Override
 	public ItemStack getContainerItem(ItemStack stack) {
-		return super.getContainerItem(stack);
+		ItemStack copy = stack.copy();
+		
+		this.drain(copy, Fluid.BUCKET_VOLUME, true);
+		
+		return copy;
 	}
 
 	@Override
