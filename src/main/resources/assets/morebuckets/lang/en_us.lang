@@ -15,6 +15,13 @@ item.morebuckets.steel_bucket.name=Steel Bucket
 item.morebuckets.emerald_bucket.name=Emerald Bucket
 item.morebuckets.diamond_bucket.name=Diamond Bucket
 
+item.morebuckets.inferium_bucket.name=Inferium Bucket
+item.morebuckets.prudentium_bucket.name=Prudentium Bucket
+item.morebuckets.intermedium_bucket.name=Intermedium Bucket
+item.morebuckets.superium_bucket.name=Superium Bucket
+item.morebuckets.supremium_bucket.name=Supremium Bucket
+item.morebuckets.insanium_bucket.name=Insanium Bucket
+
 # TOOLTIPS
 tooltip.morebuckets.empty=Empty
 tooltip.morebuckets.buckets=%s/%s - %s

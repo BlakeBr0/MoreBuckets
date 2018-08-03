@@ -2,7 +2,7 @@
 	"conditions": [
 		{
 			"type": "minecraft:item_exists",
-			"item": "morebuckets:tin_bucket"
+			"item": "morebuckets:inferium_bucket"
 		}
 	],
 	"type": "forge:ore_shaped",
@@ -13,11 +13,11 @@
 	"key": {
 		"M": {
 			"type": "forge:ore_dict",
-			"ore": "ingotTin"
+			"ore": "ingotInferium"
 		}
 	},
 	"result": {
-		"item": "morebuckets:tin_bucket",
+		"item": "morebuckets:inferium_bucket",
 		"data": 0
 	}
 }

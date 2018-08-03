@@ -63,7 +63,7 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 
 	@Override
 	public boolean showDurabilityBar(ItemStack stack) {
-		return this.getCapacity(stack) / 1000 > 1;
+		return this.getCapacity(stack) > 1000;
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 	@Override // TODO: bucket event
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
-		FluidStack fluid = getFluid(stack);
+		FluidStack fluid = this.getFluid(stack);
 
 		ActionResult<ItemStack> pickup = this.tryPickupFluid(stack, world, player, hand);
 
