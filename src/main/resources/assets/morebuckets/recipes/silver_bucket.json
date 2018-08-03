@@ -2,7 +2,7 @@
 	"conditions": [
 		{
 			"type": "minecraft:item_exists",
-			"item": "morebuckets:diamond_bucket"
+			"item": "morebuckets:silver_bucket"
 		}
 	],
 	"type": "forge:ore_shaped",
@@ -17,7 +17,7 @@
 		}
 	},
 	"result": {
-		"item": "morebuckets:diamond_bucket",
+		"item": "morebuckets:silver_bucket",
 		"data": 0
 	}
 }
