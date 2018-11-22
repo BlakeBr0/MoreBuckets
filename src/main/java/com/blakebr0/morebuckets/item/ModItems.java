@@ -24,7 +24,11 @@ public class ModItems {
 	public static ItemMoreBucket itemSuperiumBucket = new ItemMoreBucket("superium_bucket", 8000);
 	public static ItemMoreBucket itemSupremiumBucket = new ItemMoreBucket("supremium_bucket", 16000);
 	public static ItemMoreBucket itemInsaniumBucket = new ItemMoreBucket("insanium_bucket", 32000);
-
+	
+	public static ItemMoreBucket itemArditeBucket = new ItemMoreBucket("ardite_bucket", 7000);
+	public static ItemMoreBucket itemCobaltBucket = new ItemMoreBucket("cobalt_bucket", 9000);
+	public static ItemMoreBucket itemManyullynBucket = new ItemMoreBucket("manyullyn_bucket", 12000);
+	
 	public static void init(ModRegistry registry) {
 		registry.register(itemQuartzBucket, "quartz_bucket");
 		registry.register(itemObsidianBucket, "obsidian_bucket");
@@ -46,5 +50,9 @@ public class ModItems {
 		registry.register(itemSuperiumBucket, "superium_bucket");
 		registry.register(itemSupremiumBucket, "supremium_bucket");
 		registry.register(itemInsaniumBucket, "insanium_bucket");
+		
+		registry.register(itemArditeBucket, "ardite_bucket");
+		registry.register(itemCobaltBucket, "cobalt_bucket");
+		registry.register(itemManyullynBucket, "manyullyn_bucket");
 	}
 }

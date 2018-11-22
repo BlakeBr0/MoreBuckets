@@ -22,6 +22,10 @@ item.morebuckets.superium_bucket.name=Superium Bucket
 item.morebuckets.supremium_bucket.name=Supremium Bucket
 item.morebuckets.insanium_bucket.name=Insanium Bucket
 
+item.morebuckets.ardite_bucket.name=Ardite Bucket
+item.morebuckets.cobalt_bucket.name=Cobalt Bucket
+item.morebuckets.manyullyn_bucket.name=Manyullyn Bucket
+
 # TOOLTIPS
 tooltip.morebuckets.empty=Empty
 tooltip.morebuckets.buckets=%s/%s - %s
