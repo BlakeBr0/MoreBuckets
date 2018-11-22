@@ -2,6 +2,7 @@ package com.blakebr0.morebuckets.proxy;
 
 import com.blakebr0.morebuckets.MoreBuckets;
 import com.blakebr0.morebuckets.item.ModItems;
+import com.blakebr0.morebuckets.lib.RecipeFixer;
 
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -18,6 +19,6 @@ public class CommonProxy {
 	}
 
 	public void postInit(FMLPostInitializationEvent event) {
-
+		RecipeFixer.fixRecipes();
 	}
 }
