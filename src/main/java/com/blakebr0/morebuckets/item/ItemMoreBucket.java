@@ -150,6 +150,19 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 
 		return ActionResult.newResult(EnumActionResult.FAIL, stack);
 	}
+	
+	@Override
+	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
+		if (target instanceof EntityCow) {
+			EntityCow cow = (EntityCow) target;
+			if (!player.capabilities.isCreativeMode && !cow.isChild()) {
+				Fluid milk = FluidRegistry.getFluid("milk");
+				return milk != null ? this.fill(stack, new FluidStack(FluidRegistry.getFluid("milk"), 1000), true) > 0 : false;
+			}
+		}
+		
+		return false;
+	}
 
 	public int getSpaceLeft(ItemStack stack) {
 		return this.getCapacity(stack) - BucketUtils.getFluidAmount(stack);
