@@ -11,8 +11,11 @@ import com.blakebr0.morebuckets.MoreBuckets;
 import com.blakebr0.morebuckets.lib.BucketUtils;
 import com.blakebr0.morebuckets.lib.FluidHolderItemWrapper;
 import com.blakebr0.morebuckets.lib.IFluidHolder;
+import com.blakebr0.morebuckets.lib.RecipeFixer;
 
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemStack;
@@ -28,6 +31,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidActionResult;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 
@@ -37,6 +41,10 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 	private final int capacity;
 
 	public ItemMoreBucket(String name, int capacity) {
+		this(name, capacity, true);
+	}
+	
+	public ItemMoreBucket(String name, int capacity, boolean recipeReplacement) {
 		super(MoreBuckets.MOD_ID + "." + name);
 		this.name = name;
 		this.capacity = capacity;
@@ -45,6 +53,7 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 		this.setCreativeTab(MoreBuckets.CREATIVE_TAB);
 		// TODO: custom dispenser behavior
 		// BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DispenseFluidContainer.getInstance());
+		RecipeFixer.VALID_BUCKETS.add(this);
 	}
 
 	@Override
@@ -88,7 +97,7 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 		tooltip.add(Utils.localize("tooltip.morebuckets.buckets", buckets, capacity, fluidName));
 	}
 
-	@Override // TODO: bucket event
+	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
 		ItemStack stack = player.getHeldItem(hand);
 		FluidStack fluid = this.getFluid(stack);
