@@ -13,6 +13,7 @@ import com.blakebr0.morebuckets.lib.FluidHolderItemWrapper;
 import com.blakebr0.morebuckets.lib.IFluidHolder;
 import com.blakebr0.morebuckets.lib.RecipeFixer;
 
+import net.minecraft.block.BlockDispenser;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityCow;
@@ -29,6 +30,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fluids.DispenseFluidContainer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -51,8 +53,8 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 
 		this.setMaxStackSize(1);
 		this.setCreativeTab(MoreBuckets.CREATIVE_TAB);
-		// TODO: custom dispenser behavior
-		// BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DispenseFluidContainer.getInstance());
+
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DispenseFluidContainer.getInstance());
 		RecipeFixer.VALID_BUCKETS.add(this);
 	}
 
