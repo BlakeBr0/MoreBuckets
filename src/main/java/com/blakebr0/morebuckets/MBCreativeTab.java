@@ -1,5 +1,7 @@
 package com.blakebr0.morebuckets;
 
+import com.blakebr0.morebuckets.item.ModItems;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 
@@ -11,6 +13,6 @@ public class MBCreativeTab extends CreativeTabs {
 
 	@Override
 	public ItemStack getTabIconItem() {
-		return ItemStack.EMPTY;
+		return new ItemStack(ModItems.DIAMOND_BUCKET);
 	}
 }
