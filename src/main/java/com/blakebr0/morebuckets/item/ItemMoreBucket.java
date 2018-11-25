@@ -56,7 +56,10 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 		this.setCreativeTab(MoreBuckets.CREATIVE_TAB);
 
 		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DispenseBucketBehavior.getInstance());
-		RecipeFixer.VALID_BUCKETS.add(this);
+		
+		if (recipeReplacement) {			
+			RecipeFixer.VALID_BUCKETS.add(this);
+		}
 	}
 
 	@Override
