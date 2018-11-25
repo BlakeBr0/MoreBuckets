@@ -2,15 +2,16 @@ package com.blakebr0.morebuckets.item;
 
 import java.util.List;
 
+import com.blakebr0.cucumber.fluid.FluidHolderItemWrapper;
+import com.blakebr0.cucumber.helper.BucketHelper;
+import com.blakebr0.cucumber.helper.FluidHelper;
 import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.cucumber.helper.ResourceHelper;
+import com.blakebr0.cucumber.iface.IFluidHolder;
 import com.blakebr0.cucumber.iface.IModelHelper;
 import com.blakebr0.cucumber.item.ItemBase;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.morebuckets.MoreBuckets;
-import com.blakebr0.morebuckets.lib.BucketUtils;
-import com.blakebr0.morebuckets.lib.FluidHolderItemWrapper;
-import com.blakebr0.morebuckets.lib.IFluidHolder;
 import com.blakebr0.morebuckets.lib.RecipeFixer;
 
 import net.minecraft.block.BlockDispenser;
@@ -60,7 +61,7 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 
 	@Override
 	public boolean hasContainerItem(ItemStack stack) {
-		return BucketUtils.getFluidAmount(stack) > 0;
+		return BucketHelper.getFluidAmount(stack) > 0;
 	}
 
 	@Override
@@ -80,20 +81,20 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack) {
 		int capacity = this.getCapacity(stack);
-		double stored = capacity - BucketUtils.getFluidAmount(stack);
+		double stored = capacity - BucketHelper.getFluidAmount(stack);
 		return (double) stored / capacity;
 	}
 
 	@Override
 	public void addInformation(ItemStack stack, World world, List<String> tooltip, ITooltipFlag flag) {
 		int capacity = this.getCapacity(stack) / 1000;
-		int buckets = BucketUtils.getFluidAmount(stack) / 1000;
+		int buckets = BucketHelper.getFluidAmount(stack) / 1000;
 		FluidStack fluid = this.getFluid(stack);
 
 		String fluidName = fluid == null ? Utils.localize("tooltip.morebuckets.empty") : fluid.getLocalizedName();
 
-		if (fluid != null && BucketUtils.getFluidRarity(fluid) != EnumRarity.COMMON) {
-			fluidName = BucketUtils.getFluidRarity(fluid).rarityColor.toString() + fluidName;
+		if (fluid != null && FluidHelper.getFluidRarity(fluid) != EnumRarity.COMMON) {
+			fluidName = FluidHelper.getFluidRarity(fluid).rarityColor.toString() + fluidName;
 		}
 
 		tooltip.add(Utils.localize("tooltip.morebuckets.buckets", buckets, capacity, fluidName));
@@ -118,7 +119,7 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 	}
 
 	private ActionResult<ItemStack> tryPlaceFluid(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-		if (BucketUtils.getFluidAmount(stack) < Fluid.BUCKET_VOLUME)
+		if (BucketHelper.getFluidAmount(stack) < Fluid.BUCKET_VOLUME)
 			return ActionResult.newResult(EnumActionResult.PASS, stack);
 
 		RayTraceResult trace = this.rayTrace(world, player, false);
@@ -176,7 +177,7 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 	}
 
 	public int getSpaceLeft(ItemStack stack) {
-		return this.getCapacity(stack) - BucketUtils.getFluidAmount(stack);
+		return this.getCapacity(stack) - BucketHelper.getFluidAmount(stack);
 	}
 
 	@Override
@@ -191,7 +192,7 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 
 	@Override
 	public FluidStack getFluid(ItemStack stack) {
-		return BucketUtils.getFluid(stack);
+		return BucketHelper.getFluid(stack);
 	}
 
 	@Override
@@ -206,12 +207,12 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 
 		if (!canFill) {
 			if (bucketFluid == null)
-				return BucketUtils.toBuckets(Math.min(capacity, fluid.amount));
+				return BucketHelper.toBuckets(Math.min(capacity, fluid.amount));
 
-			return BucketUtils.toBuckets(Math.min(capacity - bucketFluid.amount, fluid.amount));
+			return BucketHelper.toBuckets(Math.min(capacity - bucketFluid.amount, fluid.amount));
 		}
 
-		int filled = BucketUtils.toBuckets(Math.min(fluid.amount, capacity));
+		int filled = BucketHelper.toBuckets(Math.min(fluid.amount, capacity));
 
 		if (bucketFluid == null) {
 			NBTTagCompound fluidTag = fluid.writeToNBT(new NBTTagCompound());
@@ -221,8 +222,8 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 			return filled;
 		}
 
-		filled = BucketUtils.toBuckets(capacity - bucketFluid.amount);
-		int amount = BucketUtils.toBuckets(fluid.amount);
+		filled = BucketHelper.toBuckets(capacity - bucketFluid.amount);
+		int amount = BucketHelper.toBuckets(fluid.amount);
 
 		if (amount < filled) {
 			bucketFluid.amount += amount;
@@ -245,7 +246,7 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 		FluidStack fluid = this.getFluid(stack);
 		if (fluid == null) return null;
 
-		int drained = BucketUtils.toBuckets(Math.min(fluid.amount, amount));
+		int drained = BucketHelper.toBuckets(Math.min(fluid.amount, amount));
 
 		if (canDrain) {
 			if (amount >= fluid.amount) {

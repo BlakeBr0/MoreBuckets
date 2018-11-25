@@ -2,6 +2,7 @@ package com.blakebr0.morebuckets.lib;
 
 import java.util.stream.Collectors;
 
+import com.blakebr0.cucumber.helper.BucketHelper;
 import com.blakebr0.morebuckets.item.ItemMoreBucket;
 
 import net.minecraft.init.Items;
@@ -50,7 +51,7 @@ public class FluidIngredient extends Ingredient {
 		if (fluid != null) {
 			ItemStack[] parentStacks = ingredient.getMatchingStacks();
 			ItemStack[] bucketStacks = RecipeFixer.VALID_BUCKETS.stream()
-					.map(e -> BucketUtils.getFilledBucket(fluid, e, e.getCapacity(ItemStack.EMPTY)))
+					.map(e -> BucketHelper.getFilledBucket(fluid, e, e.getCapacity(ItemStack.EMPTY)))
 					.collect(Collectors.toList())
 					.toArray(new ItemStack[0]);
 			ItemStack[] matchingStacks = new ItemStack[parentStacks.length + bucketStacks.length];
