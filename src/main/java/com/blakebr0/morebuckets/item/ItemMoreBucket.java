@@ -12,6 +12,7 @@ import com.blakebr0.cucumber.iface.IModelHelper;
 import com.blakebr0.cucumber.item.ItemBase;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.morebuckets.MoreBuckets;
+import com.blakebr0.morebuckets.lib.DispenseBucketBehavior;
 import com.blakebr0.morebuckets.lib.RecipeFixer;
 
 import net.minecraft.block.BlockDispenser;
@@ -31,7 +32,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.fluids.DispenseFluidContainer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -55,7 +55,7 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 		this.setMaxStackSize(1);
 		this.setCreativeTab(MoreBuckets.CREATIVE_TAB);
 
-		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DispenseFluidContainer.getInstance());
+		BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DispenseBucketBehavior.getInstance());
 		RecipeFixer.VALID_BUCKETS.add(this);
 	}
 
