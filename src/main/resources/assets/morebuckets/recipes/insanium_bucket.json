@@ -1,0 +1,23 @@
+{
+	"conditions": [
+		{
+			"type": "minecraft:item_exists",
+			"item": "morebuckets:insanium_bucket"
+		}
+	],
+	"type": "forge:ore_shaped",
+	"pattern": [
+		"M M",
+		" M "
+	],
+	"key": {
+		"M": {
+			"type": "forge:ore_dict",
+			"ore": "ingotInsanium"
+		}
+	},
+	"result": {
+		"item": "morebuckets:insanium_bucket",
+		"data": 0
+	}
+}
