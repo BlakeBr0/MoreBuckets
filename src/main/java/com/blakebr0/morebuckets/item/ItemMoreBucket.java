@@ -120,51 +120,6 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 			}
 		}
 	}
-
-	private ActionResult<ItemStack> tryPlaceFluid(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-		if (BucketHelper.getFluidAmount(stack) < Fluid.BUCKET_VOLUME)
-			return ActionResult.newResult(EnumActionResult.PASS, stack);
-
-		RayTraceResult trace = this.rayTrace(world, player, false);
-		if (trace == null || trace.typeOfHit != RayTraceResult.Type.BLOCK)
-			return ActionResult.newResult(EnumActionResult.PASS, stack);
-
-		BlockPos pos = trace.getBlockPos();
-		if (world.isBlockModifiable(player, pos)) {
-			BlockPos targetPos = pos.offset(trace.sideHit);
-			if (player.canPlayerEdit(targetPos, trace.sideHit.getOpposite(), stack)) {
-				FluidActionResult result = FluidUtil.tryPlaceFluid(player, world, targetPos, stack, new FluidStack(this.getFluid(stack), Fluid.BUCKET_VOLUME));
-				if (result.isSuccess() && !player.capabilities.isCreativeMode) {
-					player.addStat(StatList.getObjectUseStats(this));
-					return ActionResult.newResult(EnumActionResult.SUCCESS, result.getResult());
-				}
-			}
-		}
-
-		return ActionResult.newResult(EnumActionResult.FAIL, stack);
-	}
-
-	private ActionResult<ItemStack> tryPickupFluid(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-		if (this.getSpaceLeft(stack) < Fluid.BUCKET_VOLUME)
-			return ActionResult.newResult(EnumActionResult.PASS, stack);
-
-		RayTraceResult trace = this.rayTrace(world, player, true);
-		if (trace == null || trace.sideHit == null || trace.typeOfHit != RayTraceResult.Type.BLOCK)
-			return ActionResult.newResult(EnumActionResult.PASS, stack);
-
-		BlockPos pos = trace.getBlockPos();
-		if (world.isBlockModifiable(player, pos)) {
-			if (player.canPlayerEdit(pos, trace.sideHit, stack)) {
-				FluidActionResult result = FluidUtil.tryPickUpFluid(stack, player, world, pos, trace.sideHit);
-				if (result.isSuccess() && !player.capabilities.isCreativeMode) {
-					player.addStat(StatList.getObjectUseStats(this));
-					return ActionResult.newResult(EnumActionResult.SUCCESS, result.getResult());
-				}
-			}
-		}
-
-		return ActionResult.newResult(EnumActionResult.FAIL, stack);
-	}
 	
 	@Override
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
@@ -172,15 +127,11 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 			EntityCow cow = (EntityCow) target;
 			if (!player.capabilities.isCreativeMode && !cow.isChild()) {
 				Fluid milk = FluidRegistry.getFluid("milk");
-				return milk != null ? this.fill(stack, new FluidStack(FluidRegistry.getFluid("milk"), 1000), true) > 0 : false;
+				return milk != null ? this.fill(stack, new FluidStack(milk, 1000), true) > 0 : false;
 			}
 		}
 		
 		return false;
-	}
-
-	public int getSpaceLeft(ItemStack stack) {
-		return this.getCapacity(stack) - BucketHelper.getFluidAmount(stack);
 	}
 
 	@Override
@@ -269,5 +220,54 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 	@Override
 	public void initModels() {
 		ModelLoader.setCustomMeshDefinition(this, stack -> ResourceHelper.getModelResource(MoreBuckets.MOD_ID, this.name, "inventory"));
+	}
+	
+	public int getSpaceLeft(ItemStack stack) {
+		return this.getCapacity(stack) - BucketHelper.getFluidAmount(stack);
+	}
+	
+	private ActionResult<ItemStack> tryPlaceFluid(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+		if (BucketHelper.getFluidAmount(stack) < Fluid.BUCKET_VOLUME)
+			return ActionResult.newResult(EnumActionResult.PASS, stack);
+
+		RayTraceResult trace = this.rayTrace(world, player, false);
+		if (trace == null || trace.typeOfHit != RayTraceResult.Type.BLOCK)
+			return ActionResult.newResult(EnumActionResult.PASS, stack);
+
+		BlockPos pos = trace.getBlockPos();
+		if (world.isBlockModifiable(player, pos)) {
+			BlockPos targetPos = pos.offset(trace.sideHit);
+			if (player.canPlayerEdit(targetPos, trace.sideHit.getOpposite(), stack)) {
+				FluidActionResult result = FluidUtil.tryPlaceFluid(player, world, targetPos, stack, new FluidStack(this.getFluid(stack), Fluid.BUCKET_VOLUME));
+				if (result.isSuccess() && !player.capabilities.isCreativeMode) {
+					player.addStat(StatList.getObjectUseStats(this));
+					return ActionResult.newResult(EnumActionResult.SUCCESS, result.getResult());
+				}
+			}
+		}
+
+		return ActionResult.newResult(EnumActionResult.FAIL, stack);
+	}
+
+	private ActionResult<ItemStack> tryPickupFluid(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+		if (this.getSpaceLeft(stack) < Fluid.BUCKET_VOLUME)
+			return ActionResult.newResult(EnumActionResult.PASS, stack);
+
+		RayTraceResult trace = this.rayTrace(world, player, true);
+		if (trace == null || trace.sideHit == null || trace.typeOfHit != RayTraceResult.Type.BLOCK)
+			return ActionResult.newResult(EnumActionResult.PASS, stack);
+
+		BlockPos pos = trace.getBlockPos();
+		if (world.isBlockModifiable(player, pos)) {
+			if (player.canPlayerEdit(pos, trace.sideHit, stack)) {
+				FluidActionResult result = FluidUtil.tryPickUpFluid(stack, player, world, pos, trace.sideHit);
+				if (result.isSuccess() && !player.capabilities.isCreativeMode) {
+					player.addStat(StatList.getObjectUseStats(this));
+					return ActionResult.newResult(EnumActionResult.SUCCESS, result.getResult());
+				}
+			}
+		}
+
+		return ActionResult.newResult(EnumActionResult.FAIL, stack);
 	}
 }
