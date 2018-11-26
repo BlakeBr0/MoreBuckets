@@ -17,7 +17,7 @@ public class MoreBuckets {
 	public static final String MOD_ID = "morebuckets";
 	public static final String NAME = "More Buckets";
 	public static final String VERSION = "${version}";
-	public static final String DEPENDENCIES = "required-after:cucumber@[1.1.1,)";
+	public static final String DEPENDENCIES = "required-after:cucumber@[1.1.2,)";
 
 	public static final ModRegistry REGISTRY = ModRegistry.create(MOD_ID);
 	public static final CreativeTabs CREATIVE_TAB = new MBCreativeTab();
