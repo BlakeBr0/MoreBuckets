@@ -8,27 +8,27 @@ public class ModItems {
 	public static final ItemMoreBucket QUARTZ_BUCKET = new ItemMoreBucket("quartz_bucket", 2000);
 	public static final ItemMoreBucket OBSIDIAN_BUCKET = new ItemMoreBucket("obsidian_bucket", 3000);
 	public static final ItemMoreBucket GOLD_BUCKET = new ItemMoreBucket("golden_bucket", 4000);
-	public static final ItemMoreBucket EMERALD_BUCKET = new ItemMoreBucket("emerald_bucket", 6000);
-	public static final ItemMoreBucket DIAMOND_BUCKET = new ItemMoreBucket("diamond_bucket", 8000);
+	public static final ItemMoreBucket EMERALD_BUCKET = new ItemMoreBucket("emerald_bucket", 8000);
+	public static final ItemMoreBucket DIAMOND_BUCKET = new ItemMoreBucket("diamond_bucket", 10000);
 	
 	public static final ItemMoreBucket ALUMINUM_BUCKET = new ItemMoreBucket("aluminum_bucket", 1000);
 	public static final ItemMoreBucket COPPER_BUCKET = new ItemMoreBucket("copper_bucket", 1000);
 	public static final ItemMoreBucket TIN_BUCKET = new ItemMoreBucket("tin_bucket", 1000);
 	public static final ItemMoreBucket RUBBER_BUCKET = new ItemMoreBucket("rubber_bucket", 1000);
-	public static final ItemMoreBucket SILVER_BUCKET = new ItemMoreBucket("silver_bucket", 2000);
-	public static final ItemMoreBucket BRONZE_BUCKET = new ItemMoreBucket("bronze_bucket", 3000);
-	public static final ItemMoreBucket STEEL_BUCKET = new ItemMoreBucket("steel_bucket", 4000);
+	public static final ItemMoreBucket SILVER_BUCKET = new ItemMoreBucket("silver_bucket", 3000);
+	public static final ItemMoreBucket BRONZE_BUCKET = new ItemMoreBucket("bronze_bucket", 4000);
+	public static final ItemMoreBucket STEEL_BUCKET = new ItemMoreBucket("steel_bucket", 6000);
 
-	public static final ItemMoreBucket INFERIUM_BUCKET = new ItemMoreBucket("inferium_bucket", 1000, ModChecker.MYSTICAL_AGRICULTURE);
-	public static final ItemMoreBucket PRUDENTIUM_BUCKET = new ItemMoreBucket("prudentium_bucket", 2000, ModChecker.MYSTICAL_AGRICULTURE);
-	public static final ItemMoreBucket INTERMEDIUM_BUCKET = new ItemMoreBucket("intermedium_bucket", 4000, ModChecker.MYSTICAL_AGRICULTURE);
-	public static final ItemMoreBucket SUPERIUM_BUCKET = new ItemMoreBucket("superium_bucket", 8000, ModChecker.MYSTICAL_AGRICULTURE);
-	public static final ItemMoreBucket SUPREMIUM_BUCKET = new ItemMoreBucket("supremium_bucket", 16000, ModChecker.MYSTICAL_AGRICULTURE);
-	public static final ItemMoreBucket INSANIUM_BUCKET = new ItemMoreBucket("insanium_bucket", 32000, ModChecker.MYSTICAL_AGRADDITIONS);
+	public static final ItemMoreBucket INFERIUM_BUCKET = new ItemMoreBucket("inferium_bucket", 2000, ModChecker.MYSTICAL_AGRICULTURE);
+	public static final ItemMoreBucket PRUDENTIUM_BUCKET = new ItemMoreBucket("prudentium_bucket", 4000, ModChecker.MYSTICAL_AGRICULTURE);
+	public static final ItemMoreBucket INTERMEDIUM_BUCKET = new ItemMoreBucket("intermedium_bucket", 8000, ModChecker.MYSTICAL_AGRICULTURE);
+	public static final ItemMoreBucket SUPERIUM_BUCKET = new ItemMoreBucket("superium_bucket", 16000, ModChecker.MYSTICAL_AGRICULTURE);
+	public static final ItemMoreBucket SUPREMIUM_BUCKET = new ItemMoreBucket("supremium_bucket", 32000, ModChecker.MYSTICAL_AGRICULTURE);
+	public static final ItemMoreBucket INSANIUM_BUCKET = new ItemMoreBucket("insanium_bucket", 64000, ModChecker.MYSTICAL_AGRADDITIONS);
 	
-	public static final ItemMoreBucket ARDITE_BUCKET = new ItemMoreBucket("ardite_bucket", 7000, ModChecker.TINKERS_CONSTRUCT);
+	public static final ItemMoreBucket ARDITE_BUCKET = new ItemMoreBucket("ardite_bucket", 9000, ModChecker.TINKERS_CONSTRUCT);
 	public static final ItemMoreBucket COBALT_BUCKET = new ItemMoreBucket("cobalt_bucket", 9000, ModChecker.TINKERS_CONSTRUCT);
-	public static final ItemMoreBucket MANYULLYN_BUCKET = new ItemMoreBucket("manyullyn_bucket", 12000, ModChecker.TINKERS_CONSTRUCT);
+	public static final ItemMoreBucket MANYULLYN_BUCKET = new ItemMoreBucket("manyullyn_bucket", 16000, ModChecker.TINKERS_CONSTRUCT);
 	
 	public static void init(ModRegistry registry) {
 		registry.register(QUARTZ_BUCKET, "quartz_bucket");
