@@ -1,6 +1,7 @@
 package com.blakebr0.morebuckets.item;
 
 import com.blakebr0.cucumber.registry.ModRegistry;
+import com.blakebr0.morebuckets.lib.ModChecker;
 
 public class ModItems {
 
@@ -18,16 +19,16 @@ public class ModItems {
 	public static final ItemMoreBucket BRONZE_BUCKET = new ItemMoreBucket("bronze_bucket", 3000);
 	public static final ItemMoreBucket STEEL_BUCKET = new ItemMoreBucket("steel_bucket", 4000);
 
-	public static final ItemMoreBucket INFERIUM_BUCKET = new ItemMoreBucket("inferium_bucket", 1000);
-	public static final ItemMoreBucket PRUDENTIUM_BUCKET = new ItemMoreBucket("prudentium_bucket", 2000);
-	public static final ItemMoreBucket INTERMEDIUM_BUCKET = new ItemMoreBucket("intermedium_bucket", 4000);
-	public static final ItemMoreBucket SUPERIUM_BUCKET = new ItemMoreBucket("superium_bucket", 8000);
-	public static final ItemMoreBucket SUPREMIUM_BUCKET = new ItemMoreBucket("supremium_bucket", 16000);
-	public static final ItemMoreBucket INSANIUM_BUCKET = new ItemMoreBucket("insanium_bucket", 32000);
+	public static final ItemMoreBucket INFERIUM_BUCKET = new ItemMoreBucket("inferium_bucket", 1000, ModChecker.MYSTICAL_AGRICULTURE);
+	public static final ItemMoreBucket PRUDENTIUM_BUCKET = new ItemMoreBucket("prudentium_bucket", 2000, ModChecker.MYSTICAL_AGRICULTURE);
+	public static final ItemMoreBucket INTERMEDIUM_BUCKET = new ItemMoreBucket("intermedium_bucket", 4000, ModChecker.MYSTICAL_AGRICULTURE);
+	public static final ItemMoreBucket SUPERIUM_BUCKET = new ItemMoreBucket("superium_bucket", 8000, ModChecker.MYSTICAL_AGRICULTURE);
+	public static final ItemMoreBucket SUPREMIUM_BUCKET = new ItemMoreBucket("supremium_bucket", 16000, ModChecker.MYSTICAL_AGRICULTURE);
+	public static final ItemMoreBucket INSANIUM_BUCKET = new ItemMoreBucket("insanium_bucket", 32000, ModChecker.MYSTICAL_AGRADDITIONS);
 	
-	public static final ItemMoreBucket ARDITE_BUCKET = new ItemMoreBucket("ardite_bucket", 7000);
-	public static final ItemMoreBucket COBALT_BUCKET = new ItemMoreBucket("cobalt_bucket", 9000);
-	public static final ItemMoreBucket MANYULLYN_BUCKET = new ItemMoreBucket("manyullyn_bucket", 12000);
+	public static final ItemMoreBucket ARDITE_BUCKET = new ItemMoreBucket("ardite_bucket", 7000, ModChecker.TINKERS_CONSTRUCT);
+	public static final ItemMoreBucket COBALT_BUCKET = new ItemMoreBucket("cobalt_bucket", 9000, ModChecker.TINKERS_CONSTRUCT);
+	public static final ItemMoreBucket MANYULLYN_BUCKET = new ItemMoreBucket("manyullyn_bucket", 12000, ModChecker.TINKERS_CONSTRUCT);
 	
 	public static void init(ModRegistry registry) {
 		registry.register(QUARTZ_BUCKET, "quartz_bucket");

@@ -7,6 +7,7 @@ import com.blakebr0.cucumber.helper.BucketHelper;
 import com.blakebr0.cucumber.helper.FluidHelper;
 import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.cucumber.helper.ResourceHelper;
+import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.iface.IFluidHolder;
 import com.blakebr0.cucumber.iface.IModelHelper;
 import com.blakebr0.cucumber.item.ItemBase;
@@ -38,19 +39,25 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 
-public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelper {
+public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelper, IEnableable {
 
 	private final String name;
 	private final int capacity;
+	private final boolean requiredMods;
 
 	public ItemMoreBucket(String name, int capacity) {
-		this(name, capacity, true);
+		this(name, capacity, true, true);
 	}
 	
-	public ItemMoreBucket(String name, int capacity, boolean recipeReplacement) {
+	public ItemMoreBucket(String name, int capacity, boolean requiredMods) {
+		this(name, capacity, true, requiredMods);
+	}
+	
+	public ItemMoreBucket(String name, int capacity, boolean recipeReplacement, boolean requiredMods) {
 		super(MoreBuckets.MOD_ID + "." + name);
 		this.name = name;
 		this.capacity = capacity;
+		this.requiredMods = requiredMods;
 
 		this.setMaxStackSize(1);
 		this.setCreativeTab(MoreBuckets.CREATIVE_TAB);
@@ -269,5 +276,10 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 		}
 
 		return ActionResult.newResult(EnumActionResult.FAIL, stack);
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return this.requiredMods;
 	}
 }
