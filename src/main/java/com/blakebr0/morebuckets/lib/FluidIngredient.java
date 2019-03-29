@@ -1,10 +1,7 @@
 package com.blakebr0.morebuckets.lib;
 
-import java.util.stream.Collectors;
-
 import com.blakebr0.cucumber.helper.BucketHelper;
 import com.blakebr0.morebuckets.item.ItemMoreBucket;
-
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -14,7 +11,7 @@ import net.minecraftforge.fluids.FluidUtil;
 
 public class FluidIngredient extends Ingredient {
 
-	private Ingredient parent;
+	private final Ingredient parent;
 	
 	public FluidIngredient(Ingredient parent) {
 		super(makeMatchingStacksArray(parent));
@@ -52,15 +49,14 @@ public class FluidIngredient extends Ingredient {
 			ItemStack[] parentStacks = ingredient.getMatchingStacks();
 			ItemStack[] bucketStacks = RecipeFixer.VALID_BUCKETS.stream()
 					.map(e -> BucketHelper.getFilledBucket(fluid, e, e.getCapacity(ItemStack.EMPTY)))
-					.collect(Collectors.toList())
-					.toArray(new ItemStack[0]);
+					.toArray(ItemStack[]::new);
 			ItemStack[] matchingStacks = new ItemStack[parentStacks.length + bucketStacks.length];
 					
 			for (int i = 0; i < parentStacks.length; i++) {
 				matchingStacks[i] = parentStacks[i];
 			}
 			
-			for (int j = parentStacks.length; j < parentStacks.length + bucketStacks.length; j++) {
+			for (int j = parentStacks.length; j < matchingStacks.length; j++) {
 				matchingStacks[j] = bucketStacks[j - parentStacks.length];
 			}
 			

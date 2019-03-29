@@ -57,7 +57,7 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 		this.setMaxStackSize(1);
 		this.setCreativeTab(MoreBuckets.CREATIVE_TAB);
 
-		if (isEnabled()) {
+		if (this.isEnabled()) {
 			BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DispenseBucketBehavior.getInstance());
 
 			if (recipeReplacement) {
