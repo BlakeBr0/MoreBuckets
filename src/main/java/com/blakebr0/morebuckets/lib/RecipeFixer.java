@@ -3,6 +3,7 @@ package com.blakebr0.morebuckets.lib;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import com.blakebr0.morebuckets.MoreBuckets;
 import com.blakebr0.morebuckets.item.ItemMoreBucket;
 
 import net.minecraft.init.Items;
@@ -52,9 +53,11 @@ public class RecipeFixer {
 		try {
 			Field isSimple = recipe.getClass().getDeclaredField("isSimple");
 			isSimple.setAccessible(true);
-			isSimple.set(recipe, false);
+			isSimple.setBoolean(recipe, false);
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (recipe != null && recipe.getRegistryName() != null) {
+				MoreBuckets.LOGGER.info("Unable to set recipe {} to not simple.", recipe.getRegistryName().toString());
+			}
 		}
 	}
 	
@@ -62,9 +65,11 @@ public class RecipeFixer {
 		try {
 			Field isSimple = recipe.getClass().getDeclaredField("isSimple");
 			isSimple.setAccessible(true);
-			isSimple.set(recipe, false);
+			isSimple.setBoolean(recipe, false);
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (recipe != null && recipe.getRegistryName() != null) {
+				MoreBuckets.LOGGER.info("Unable to set recipe {} to not simple.", recipe.getRegistryName().toString());
+			}
 		}
 	}
 }

@@ -10,6 +10,8 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(modid = MoreBuckets.MOD_ID, name = MoreBuckets.NAME, version = MoreBuckets.VERSION, dependencies = MoreBuckets.DEPENDENCIES)
 public class MoreBuckets {
@@ -21,6 +23,7 @@ public class MoreBuckets {
 
 	public static final ModRegistry REGISTRY = ModRegistry.create(MOD_ID);
 	public static final CreativeTabs CREATIVE_TAB = new MBCreativeTab();
+	public static final Logger LOGGER = LogManager.getLogger(NAME);
 
 	@SidedProxy(clientSide = "com.blakebr0.morebuckets.proxy.ClientProxy", serverSide = "com.blakebr0.morebuckets.proxy.ServerProxy")
 	public static CommonProxy proxy;
