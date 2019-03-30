@@ -27,7 +27,7 @@ public class FluidIngredient extends Ingredient {
 			if (fluid != null && stack.getItem() instanceof ItemMoreBucket) {
 				for (ItemStack itemstack : this.getMatchingStacks()) {
 					FluidStack fluidstack = FluidUtil.getFluidContained(itemstack);
-					if (fluidstack != null && fluidstack.isFluidEqual(fluid)) {
+                    if ((fluidstack != null && fluidstack.isFluidEqual(fluid)) || itemstack.getItem() == Items.MILK_BUCKET && fluid.getFluid().getName().equals("milk")) {
 						return true;
 					}
 				}
