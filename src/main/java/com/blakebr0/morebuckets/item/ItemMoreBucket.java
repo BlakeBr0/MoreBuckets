@@ -73,7 +73,8 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 
 	@Override
 	public ItemStack getContainerItem(ItemStack stack) {
-		ItemStack copy = stack.copy();
+		ItemStack copy = new ItemStack(this);
+		copy.setTagCompound(stack.getTagCompound());
 		
 		this.drain(copy, Fluid.BUCKET_VOLUME, true);
 		
@@ -89,7 +90,19 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 	public double getDurabilityForDisplay(ItemStack stack) {
 		int capacity = this.getCapacity(stack);
 		double stored = capacity - BucketHelper.getFluidAmount(stack);
-		return (double) stored / capacity;
+		return stored / capacity;
+	}
+
+	@Override
+	public int getItemBurnTime(ItemStack stack) {
+		FluidStack fluid = this.getFluid(stack);
+		if (fluid != null && fluid.isFluidEqual(new FluidStack(FluidRegistry.LAVA, 1000))) {
+			if (BucketHelper.getFluidAmount(stack) >= 1000) {
+				return 20000;
+			}
+		}
+
+		return -1;
 	}
 
 	@Override
@@ -131,7 +144,7 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 			EntityCow cow = (EntityCow) target;
 			if (!player.capabilities.isCreativeMode && !cow.isChild()) {
 				Fluid milk = FluidRegistry.getFluid("milk");
-				return milk != null ? this.fill(stack, new FluidStack(milk, 1000), true) > 0 : false;
+				return milk != null && this.fill(stack, new FluidStack(milk, 1000), true) > 0;
 			}
 		}
 		
