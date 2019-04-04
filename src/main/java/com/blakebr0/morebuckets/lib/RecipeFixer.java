@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.common.crafting.IngredientNBT;
 import net.minecraftforge.fluids.UniversalBucket;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
@@ -31,6 +32,9 @@ public class RecipeFixer {
 			boolean shapelessOre = false;
 			for (int i = 0; i < ing.size(); i++) {
 				Ingredient ingredient = ing.get(i);
+				if (!ingredient.getClass().equals(Ingredient.class) && !ingredient.getClass().equals(IngredientNBT.class))
+					continue;
+
 				for (ItemStack stack : ingredient.getMatchingStacks()) {
 					 if (stack.getItem() instanceof UniversalBucket || stack.getItem() == Items.LAVA_BUCKET || stack.getItem() == Items.WATER_BUCKET || stack.getItem() == Items.MILK_BUCKET) {
 						 ing.set(i, new FluidIngredient(ingredient));
