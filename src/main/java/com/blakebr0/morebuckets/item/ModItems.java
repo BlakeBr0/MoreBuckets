@@ -2,6 +2,10 @@ package com.blakebr0.morebuckets.item;
 
 import com.blakebr0.cucumber.registry.ModRegistry;
 import com.blakebr0.morebuckets.lib.ModChecker;
+import net.minecraft.item.Item;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.registries.IForgeRegistry;
 
 public class ModItems {
 
@@ -29,10 +33,13 @@ public class ModItems {
 	public static final ItemMoreBucket ARDITE_BUCKET = new ItemMoreBucket("ardite_bucket", 9000, ModChecker.TINKERS_CONSTRUCT);
 	public static final ItemMoreBucket COBALT_BUCKET = new ItemMoreBucket("cobalt_bucket", 9000, ModChecker.TINKERS_CONSTRUCT);
 	public static final ItemMoreBucket MANYULLYN_BUCKET = new ItemMoreBucket("manyullyn_bucket", 16000, ModChecker.TINKERS_CONSTRUCT);
-	
-	public static void init(ModRegistry registry) {
-		registry.register(QUARTZ_BUCKET, "quartz_bucket");
-		registry.register(OBSIDIAN_BUCKET, "obsidian_bucket");
+
+	@SubscribeEvent
+	public void onRegisterItems(RegistryEvent.Register<Item> event) {
+		IForgeRegistry<Item> registry = event.getRegistry();
+
+		registry.register(QUARTZ_BUCKET.setRegistryName("quartz_bucket"));
+		registry.register(OBSIDIAN_BUCKET.setRegistryName("obsidian_bucket"));
 		registry.register(GOLD_BUCKET, "golden_bucket");
 		registry.register(EMERALD_BUCKET, "emerald_bucket");
 		registry.register(DIAMOND_BUCKET, "diamond_bucket");

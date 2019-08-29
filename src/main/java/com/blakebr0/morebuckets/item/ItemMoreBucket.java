@@ -8,6 +8,7 @@ import com.blakebr0.cucumber.helper.ResourceHelper;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.iface.IFluidHolder;
 import com.blakebr0.cucumber.iface.IModelHelper;
+import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.cucumber.item.ItemBase;
 import com.blakebr0.cucumber.util.Utils;
 import com.blakebr0.morebuckets.MoreBuckets;
@@ -34,8 +35,7 @@ import net.minecraftforge.fluids.*;
 
 import java.util.List;
 
-public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelper, IEnableable {
-
+public class ItemMoreBucket extends BaseItem implements IFluidHolder, IModelHelper, IEnableable {
 	private final String name;
 	private final int capacity;
 	private final boolean requiredMods;
@@ -55,7 +55,7 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 		this.requiredMods = requiredMods;
 
 		this.setMaxStackSize(1);
-		this.setCreativeTab(MoreBuckets.CREATIVE_TAB);
+		this.setCreativeTab(MoreBuckets.ITEM_GROUP);
 
 		if (this.isEnabled()) {
 			BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DispenseBucketBehavior.getInstance());
@@ -94,7 +94,7 @@ public class ItemMoreBucket extends ItemBase implements IFluidHolder, IModelHelp
 	}
 
 	@Override
-	public int getItemBurnTime(ItemStack stack) {
+	public int getBurnTime(ItemStack stack) {
 		FluidStack fluid = this.getFluid(stack);
 		if (fluid != null && fluid.isFluidEqual(new FluidStack(FluidRegistry.LAVA, 1000))) {
 			if (BucketHelper.getFluidAmount(stack) >= 1000) {
