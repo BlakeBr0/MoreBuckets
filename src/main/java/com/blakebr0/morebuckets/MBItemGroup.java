@@ -11,6 +11,6 @@ public class MBItemGroup extends ItemGroup {
 
 	@Override
 	public ItemStack createIcon() {
-		return new ItemStack(ModItems.DIAMOND_BUCKET);
+		return new ItemStack(ModItems.DIAMOND_BUCKET.get());
 	}
 }

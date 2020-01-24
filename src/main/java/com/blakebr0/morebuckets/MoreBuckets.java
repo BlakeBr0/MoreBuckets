@@ -31,14 +31,4 @@ public class MoreBuckets {
 	public void onCommonSetup(FMLCommonSetupEvent event) {
 
 	}
-
-	@SubscribeEvent
-	public void onInterModEnqueue(InterModEnqueueEvent event) {
-
-	}
-
-	@SubscribeEvent
-	public void onInterModProcess(InterModProcessEvent event) {
-
-	}
 }
