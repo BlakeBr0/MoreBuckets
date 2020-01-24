@@ -1,0 +1,23 @@
+{
+	"conditions": [
+		{
+			"type": "minecraft:item_exists",
+			"item": "morebuckets:prudentium_bucket"
+		}
+	],
+	"type": "forge:ore_shaped",
+	"pattern": [
+		"M M",
+		" M "
+	],
+	"key": {
+		"M": {
+			"type": "forge:ore_dict",
+			"ore": "ingotPrudentium"
+		}
+	},
+	"result": {
+		"item": "morebuckets:prudentium_bucket",
+		"data": 0
+	}
+}

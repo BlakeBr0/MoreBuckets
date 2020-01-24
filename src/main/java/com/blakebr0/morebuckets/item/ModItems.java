@@ -1,13 +1,24 @@
 package com.blakebr0.morebuckets.item;
 
-import com.blakebr0.cucumber.registry.ModRegistry;
+import com.blakebr0.cucumber.item.BaseItem;
+import com.blakebr0.morebuckets.MoreBuckets;
 import com.blakebr0.morebuckets.lib.ModChecker;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
+
+import static com.blakebr0.morebuckets.MoreBuckets.ITEM_GROUP;
+
 public class ModItems {
+	public static final List<Supplier<? extends Item>> ENTRIES = new ArrayList<>();
 
 	public static final ItemMoreBucket QUARTZ_BUCKET = new ItemMoreBucket("quartz_bucket", 2000);
 	public static final ItemMoreBucket OBSIDIAN_BUCKET = new ItemMoreBucket("obsidian_bucket", 3000);
@@ -40,27 +51,37 @@ public class ModItems {
 
 		registry.register(QUARTZ_BUCKET.setRegistryName("quartz_bucket"));
 		registry.register(OBSIDIAN_BUCKET.setRegistryName("obsidian_bucket"));
-		registry.register(GOLD_BUCKET, "golden_bucket");
-		registry.register(EMERALD_BUCKET, "emerald_bucket");
-		registry.register(DIAMOND_BUCKET, "diamond_bucket");
+		registry.register(GOLD_BUCKET.setRegistryName("golden_bucket"));
+		registry.register(EMERALD_BUCKET.setRegistryName("emerald_bucket"));
+		registry.register(DIAMOND_BUCKET.setRegistryName("diamond_bucket"));
 		
-		registry.register(ALUMINUM_BUCKET, "aluminum_bucket");
-		registry.register(COPPER_BUCKET, "copper_bucket");
-		registry.register(TIN_BUCKET, "tin_bucket");
-		registry.register(RUBBER_BUCKET, "rubber_bucket");
-		registry.register(SILVER_BUCKET, "silver_bucket");
-		registry.register(BRONZE_BUCKET, "bronze_bucket");
-		registry.register(STEEL_BUCKET, "steel_bucket");
+		registry.register(ALUMINUM_BUCKET.setRegistryName("aluminum_bucket"));
+		registry.register(COPPER_BUCKET.setRegistryName("copper_bucket"));
+		registry.register(TIN_BUCKET.setRegistryName("tin_bucket"));
+		registry.register(RUBBER_BUCKET.setRegistryName("rubber_bucket"));
+		registry.register(SILVER_BUCKET.setRegistryName("silver_bucket"));
+		registry.register(BRONZE_BUCKET.setRegistryName("bronze_bucket"));
+		registry.register(STEEL_BUCKET.setRegistryName("steel_bucket"));
 		
-		registry.register(INFERIUM_BUCKET, "inferium_bucket");
-		registry.register(PRUDENTIUM_BUCKET, "prudentium_bucket");
-		registry.register(INTERMEDIUM_BUCKET, "intermedium_bucket");
-		registry.register(SUPERIUM_BUCKET, "superium_bucket");
-		registry.register(SUPREMIUM_BUCKET, "supremium_bucket");
-		registry.register(INSANIUM_BUCKET, "insanium_bucket");
+		registry.register(INFERIUM_BUCKET.setRegistryName("inferium_bucket"));
+		registry.register(PRUDENTIUM_BUCKET.setRegistryName("prudentium_bucket"));
+		registry.register(INTERMEDIUM_BUCKET.setRegistryName("intermedium_bucket"));
+		registry.register(SUPERIUM_BUCKET.setRegistryName("superium_bucket"));
+		registry.register(SUPREMIUM_BUCKET.setRegistryName("supremium_bucket"));
+		registry.register(INSANIUM_BUCKET.setRegistryName("insanium_bucket"));
 		
-		registry.register(ARDITE_BUCKET, "ardite_bucket");
-		registry.register(COBALT_BUCKET, "cobalt_bucket");
-		registry.register(MANYULLYN_BUCKET, "manyullyn_bucket");
+		registry.register(ARDITE_BUCKET.setRegistryName("ardite_bucket"));
+		registry.register(COBALT_BUCKET.setRegistryName("cobalt_bucket"));
+		registry.register(MANYULLYN_BUCKET.setRegistryName("manyullyn_bucket"));
+	}
+
+	private static <T extends Item> RegistryObject<T> register(String name) {
+		return register(name, () -> new BaseItem(p -> p.group(ITEM_GROUP)));
+	}
+
+	private static <T extends Item> RegistryObject<T> register(String name, Supplier<? extends Item> item) {
+		ResourceLocation loc = new ResourceLocation(MoreBuckets.MOD_ID, name);
+		ENTRIES.add(() -> item.get().setRegistryName(loc));
+		return RegistryObject.of(loc, ForgeRegistries.ITEMS);
 	}
 }
