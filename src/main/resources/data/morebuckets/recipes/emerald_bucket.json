@@ -1,0 +1,15 @@
+{
+	"type": "crafting_shaped",
+	"pattern": [
+		"M M",
+		" M "
+	],
+	"key": {
+		"M": {
+			"tag": "forge:gems/emerald"
+		}
+	},
+	"result": {
+		"item": "morebuckets:emerald_bucket"
+	}
+}

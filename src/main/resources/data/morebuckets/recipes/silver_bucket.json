@@ -1,0 +1,24 @@
+{
+	"type": "crafting_shaped",
+	"conditions": [
+		{
+			"type": "forge:not",
+			"value": {
+				"type": "forge:tag_empty",
+				"tag": "forge:ingots/silver"
+			}
+		}
+	],
+	"pattern": [
+		"M M",
+		" M "
+	],
+	"key": {
+		"M": {
+			"tag": "forge:gems/silver"
+		}
+	},
+	"result": {
+		"item": "morebuckets:silver_bucket"
+	}
+}

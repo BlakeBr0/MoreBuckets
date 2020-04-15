@@ -1,0 +1,21 @@
+{
+	"type": "crafting_shaped",
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "mysticalagriculture"
+		}
+	],
+	"pattern": [
+		"M M",
+		" M "
+	],
+	"key": {
+		"M": {
+			"item": "mysticalagriculture:prudentium_ingot"
+		}
+	},
+	"result": {
+		"item": "morebuckets:prudentium_bucket"
+	}
+}

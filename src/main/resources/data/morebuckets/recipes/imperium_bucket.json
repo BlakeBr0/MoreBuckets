@@ -1,0 +1,21 @@
+{
+	"type": "crafting_shaped",
+	"conditions": [
+		{
+			"type": "forge:mod_loaded",
+			"modid": "mysticalagriculture"
+		}
+	],
+	"pattern": [
+		"M M",
+		" M "
+	],
+	"key": {
+		"M": {
+			"item": "mysticalagriculture:imperium_ingot"
+		}
+	},
+	"result": {
+		"item": "morebuckets:imperium_bucket"
+	}
+}

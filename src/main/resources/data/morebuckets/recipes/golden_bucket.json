@@ -1,0 +1,15 @@
+{
+	"type": "crafting_shaped",
+	"pattern": [
+		"M M",
+		" M "
+	],
+	"key": {
+		"M": {
+			"tag": "forge:ingots/gold"
+		}
+	},
+	"result": {
+		"item": "morebuckets:golden_bucket"
+	}
+}
