@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "morebuckets:item/quartz_bucket",
+    "layer1": "forge:item/mask/bucket_fluid_drip"
+  }
+}

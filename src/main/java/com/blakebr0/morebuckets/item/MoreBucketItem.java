@@ -9,14 +9,17 @@ import com.blakebr0.cucumber.iface.IFluidHolder;
 import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.morebuckets.MoreBuckets;
 import com.blakebr0.morebuckets.lib.ModTooltips;
-//import com.blakebr0.morebuckets.lib.RecipeFixer;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
+import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -34,6 +37,7 @@ import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.List;
 
@@ -95,7 +99,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 	@Override
 	public int getBurnTime(ItemStack stack) {
 		FluidStack fluid = this.getFluid(stack);
-		if (fluid != null && fluid.isFluidEqual(new FluidStack(Fluids.LAVA, FluidAttributes.BUCKET_VOLUME))) {
+		if (!fluid.isEmpty() && fluid.isFluidEqual(new FluidStack(Fluids.LAVA, FluidAttributes.BUCKET_VOLUME))) {
 			if (BucketHelper.getFluidAmount(stack) >= FluidAttributes.BUCKET_VOLUME) {
 				return 20000;
 			}
@@ -110,9 +114,9 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 		int buckets = BucketHelper.getFluidAmount(stack) / FluidAttributes.BUCKET_VOLUME;
 		FluidStack fluid = this.getFluid(stack);
 
-		ITextComponent fluidName = fluid == null ? ModTooltips.EMPTY.build() : fluid.getDisplayName();
+		ITextComponent fluidName = fluid.isEmpty() ? ModTooltips.EMPTY.build() : fluid.getDisplayName();
 
-		if (fluid != null && FluidHelper.getFluidRarity(fluid) != Rarity.COMMON) {
+		if (!fluid.isEmpty() && FluidHelper.getFluidRarity(fluid) != Rarity.COMMON) {
 			fluidName = new StringTextComponent(FluidHelper.getFluidRarity(fluid).color.toString() + fluidName);
 		}
 
@@ -129,10 +133,10 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 		if (pickup.getType() == ActionResultType.SUCCESS) {
 			return pickup;
 		} else {
-			if (fluid != null && fluid.getAmount() >= FluidAttributes.BUCKET_VOLUME) {
+			if (!fluid.isEmpty() && fluid.getAmount() >= FluidAttributes.BUCKET_VOLUME) {
 				return this.tryPlaceFluid(stack, world, player, hand);
 			} else {
-				return ActionResult.fail(stack);
+				return new ActionResult<>(ActionResultType.FAIL, stack);
 			}
 		}
 	}
@@ -170,13 +174,13 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 		NBTHelper.validateCompound(stack);
 
 		FluidStack bucketFluid = this.getFluid(stack);
-		if (bucketFluid != null && !fluid.isFluidEqual(bucketFluid))
+		if (!bucketFluid.isEmpty() && !fluid.isFluidEqual(bucketFluid))
 			return 0;
 
 		int capacity = this.getCapacity(stack);
 
 		if (!canFill) {
-			if (bucketFluid == null)
+			if (bucketFluid.isEmpty())
 				return BucketHelper.toBuckets(Math.min(capacity, fluid.getAmount()));
 
 			return BucketHelper.toBuckets(Math.min(capacity - bucketFluid.getAmount(), fluid.getAmount()));
@@ -184,7 +188,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 
 		int filled = BucketHelper.toBuckets(Math.min(fluid.getAmount(), capacity));
 
-		if (bucketFluid == null) {
+		if (bucketFluid.isEmpty()) {
 			CompoundNBT fluidTag = fluid.writeToNBT(new CompoundNBT());
 			fluidTag.putInt("Amount", filled);
 			stack.setTag(fluidTag);
@@ -211,10 +215,10 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 	public FluidStack drain(ItemStack stack, int amount, boolean canDrain) {
 		NBTHelper.validateCompound(stack);
 
-		if (amount == 0) return null;
+		if (amount == 0) return FluidStack.EMPTY;
 
 		FluidStack fluid = this.getFluid(stack);
-		if (fluid == null) return null;
+		if (fluid.isEmpty()) return FluidStack.EMPTY;
 
 		int drained = BucketHelper.toBuckets(Math.min(fluid.getAmount(), amount));
 
@@ -239,11 +243,11 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 	
 	private ActionResult<ItemStack> tryPlaceFluid(ItemStack stack, World world, PlayerEntity player, Hand hand) {
 		if (BucketHelper.getFluidAmount(stack) < FluidAttributes.BUCKET_VOLUME)
-			return ActionResult.pass(stack);
+			return new ActionResult<>(ActionResultType.PASS, stack);
 
 		RayTraceResult trace = rayTrace(world, player, RayTraceContext.FluidMode.NONE);
 		if (trace.getType() != RayTraceResult.Type.BLOCK)
-			return ActionResult.pass(stack);
+			return new ActionResult<>(ActionResultType.PASS, stack);
 
 		BlockRayTraceResult blockTrace = (BlockRayTraceResult) trace;
 		BlockPos pos = blockTrace.getPos();
@@ -253,37 +257,58 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 			if (player.canPlayerEdit(targetPos, face.getOpposite(), stack)) {
 				FluidActionResult result = FluidUtil.tryPlaceFluid(player, world, hand, pos, stack, new FluidStack(this.getFluid(stack), FluidAttributes.BUCKET_VOLUME));
 				if (result.isSuccess() && !player.isCreative()) {
-//					player.addStat(StatList.getObjectUseStats(this)); // TODO: Is this needed?
-					return ActionResult.success(result.getResult());
+					player.addStat(Stats.ITEM_USED.get(this));
+					return new ActionResult<>(ActionResultType.SUCCESS, result.getResult());
 				}
 			}
 		}
 
-		return ActionResult.fail(stack);
+		return new ActionResult<>(ActionResultType.FAIL, stack);
 	}
 
 	private ActionResult<ItemStack> tryPickupFluid(ItemStack stack, World world, PlayerEntity player) {
 		if (this.getSpaceLeft(stack) < FluidAttributes.BUCKET_VOLUME)
-			return ActionResult.pass(stack);
+			return new ActionResult<>(ActionResultType.PASS, stack);
 
 		RayTraceResult trace = rayTrace(world, player, RayTraceContext.FluidMode.SOURCE_ONLY);
 		if (trace.getType() != RayTraceResult.Type.BLOCK)
-			return ActionResult.pass(stack);
+			return new ActionResult<>(ActionResultType.PASS, stack);
 
 		BlockRayTraceResult blockTrace = (BlockRayTraceResult) trace;
 		BlockPos pos = blockTrace.getPos();
 		if (world.isBlockModifiable(player, pos)) {
 			Direction face = blockTrace.getFace();
 			if (player.canPlayerEdit(pos, face, stack)) {
-				FluidActionResult result = FluidUtil.tryPickUpFluid(stack, player, world, pos, face);
+				FluidActionResult result = this.tryPickUpFluid(stack, player, world, pos, face);
 				if (result.isSuccess() && !player.isCreative()) {
-//					player.addStat(Stats.getObjectUseStats(this)); // TODO: Is this needed?
-					return ActionResult.success(result.getResult());
+					player.addStat(Stats.ITEM_USED.get(this));
+					return new ActionResult<>(ActionResultType.SUCCESS, result.getResult());
 				}
 			}
 		}
 
-		return ActionResult.fail(stack);
+		return new ActionResult<>(ActionResultType.FAIL, stack);
+	}
+
+	public FluidActionResult tryPickUpFluid(ItemStack emptyContainer, PlayerEntity playerIn, World worldIn, BlockPos pos, Direction side)
+	{
+		if (emptyContainer.isEmpty() || worldIn == null || pos == null)
+		{
+			return FluidActionResult.FAILURE;
+		}
+
+		BlockState state = worldIn.getBlockState(pos);
+		Block block = state.getBlock();
+
+		if (block instanceof FlowingFluidBlock)
+		{
+			IFluidHandler targetFluidHandler = FluidUtil.getFluidHandler(worldIn, pos, side).orElse(null);
+			if (targetFluidHandler != null)
+			{
+				return FluidUtil.tryFillContainer(emptyContainer, targetFluidHandler, Integer.MAX_VALUE, playerIn, true);
+			}
+		}
+		return FluidActionResult.FAILURE;
 	}
 
 	@Override
