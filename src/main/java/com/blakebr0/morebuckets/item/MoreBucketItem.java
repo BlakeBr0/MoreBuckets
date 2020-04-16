@@ -12,7 +12,7 @@ import com.blakebr0.morebuckets.lib.ModTooltips;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.FlowingFluidBlock;
+import net.minecraft.block.IBucketPickupHandler;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -32,31 +32,31 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.DispenseFluidContainer;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.EmptyFluidHandler;
 
 import java.util.List;
 
 public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableable {
-	private final String name;
 	private final int capacity;
 	private final boolean requiredMods;
 
-	public MoreBucketItem(String name, int capacity) {
-		this(name, capacity, true, true);
+	public MoreBucketItem(int capacity) {
+		this(capacity, true, true);
 	}
 	
-	public MoreBucketItem(String name, int capacity, boolean requiredMods) {
-		this(name, capacity, true, requiredMods);
+	public MoreBucketItem(int capacity, boolean requiredMods) {
+		this(capacity, true, requiredMods);
 	}
 	
-	public MoreBucketItem(String name, int capacity, boolean recipeReplacement, boolean requiredMods) {
+	public MoreBucketItem(int capacity, boolean recipeReplacement, boolean requiredMods) {
 		super(p -> p.group(MoreBuckets.ITEM_GROUP).maxStackSize(1));
-		this.name = name;
 		this.capacity = capacity;
 		this.requiredMods = requiredMods;
 
@@ -100,9 +100,8 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 	public int getBurnTime(ItemStack stack) {
 		FluidStack fluid = this.getFluid(stack);
 		if (!fluid.isEmpty() && fluid.isFluidEqual(new FluidStack(Fluids.LAVA, FluidAttributes.BUCKET_VOLUME))) {
-			if (BucketHelper.getFluidAmount(stack) >= FluidAttributes.BUCKET_VOLUME) {
+			if (BucketHelper.getFluidAmount(stack) >= FluidAttributes.BUCKET_VOLUME)
 				return 20000;
-			}
 		}
 
 		return -1;
@@ -127,6 +126,8 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 		ItemStack stack = player.getHeldItem(hand);
 		FluidStack fluid = this.getFluid(stack);
+
+		this.fill(stack, new FluidStack(Fluids.WATER, 1000), true);
 
 		ActionResult<ItemStack> pickup = this.tryPickupFluid(stack, world, player);
 
@@ -171,8 +172,6 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 
 	@Override
 	public int fill(ItemStack stack, FluidStack fluid, boolean canFill) {
-		NBTHelper.validateCompound(stack);
-
 		FluidStack bucketFluid = this.getFluid(stack);
 		if (!bucketFluid.isEmpty() && !fluid.isFluidEqual(bucketFluid))
 			return 0;
@@ -206,15 +205,13 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 			bucketFluid.setAmount(capacity);
 		}
 
-		bucketFluid.writeToNBT(stack.getTag());
+		bucketFluid.writeToNBT(stack.getOrCreateTag());
 
 		return filled;
 	}
 
 	@Override
 	public FluidStack drain(ItemStack stack, int amount, boolean canDrain) {
-		NBTHelper.validateCompound(stack);
-
 		if (amount == 0) return FluidStack.EMPTY;
 
 		FluidStack fluid = this.getFluid(stack);
@@ -230,7 +227,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 			}
 
 			fluid.setAmount(fluid.getAmount() - drained);
-			fluid.writeToNBT(stack.getTag());
+			fluid.writeToNBT(stack.getOrCreateTag());
 		}
 
 		fluid.setAmount(drained);
@@ -255,7 +252,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 			Direction face = blockTrace.getFace();
 			BlockPos targetPos = pos.offset(face);
 			if (player.canPlayerEdit(targetPos, face.getOpposite(), stack)) {
-				FluidActionResult result = FluidUtil.tryPlaceFluid(player, world, hand, pos, stack, new FluidStack(this.getFluid(stack), FluidAttributes.BUCKET_VOLUME));
+				FluidActionResult result = FluidUtil.tryPlaceFluid(player, world, hand, pos.offset(face), stack, new FluidStack(this.getFluid(stack), FluidAttributes.BUCKET_VOLUME));
 				if (result.isSuccess() && !player.isCreative()) {
 					player.addStat(Stats.ITEM_USED.get(this));
 					return new ActionResult<>(ActionResultType.SUCCESS, result.getResult());
@@ -278,7 +275,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 		BlockPos pos = blockTrace.getPos();
 		if (world.isBlockModifiable(player, pos)) {
 			Direction face = blockTrace.getFace();
-			if (player.canPlayerEdit(pos, face, stack)) {
+			if (player.canPlayerEdit(pos.offset(face), face, stack)) {
 				FluidActionResult result = this.tryPickUpFluid(stack, player, world, pos, face);
 				if (result.isSuccess() && !player.isCreative()) {
 					player.addStat(Stats.ITEM_USED.get(this));
@@ -290,24 +287,20 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 		return new ActionResult<>(ActionResultType.FAIL, stack);
 	}
 
-	public FluidActionResult tryPickUpFluid(ItemStack emptyContainer, PlayerEntity playerIn, World worldIn, BlockPos pos, Direction side)
-	{
-		if (emptyContainer.isEmpty() || worldIn == null || pos == null)
-		{
+	public FluidActionResult tryPickUpFluid(ItemStack container, PlayerEntity player, World world, BlockPos pos, Direction side) {
+		if (container.isEmpty() || world == null || pos == null)
 			return FluidActionResult.FAILURE;
-		}
 
-		BlockState state = worldIn.getBlockState(pos);
+		BlockState state = world.getBlockState(pos);
 		Block block = state.getBlock();
 
-		if (block instanceof FlowingFluidBlock)
-		{
-			IFluidHandler targetFluidHandler = FluidUtil.getFluidHandler(worldIn, pos, side).orElse(null);
-			if (targetFluidHandler != null)
-			{
-				return FluidUtil.tryFillContainer(emptyContainer, targetFluidHandler, Integer.MAX_VALUE, playerIn, true);
+		if (block instanceof IBucketPickupHandler) {
+			LazyOptional<IFluidHandler> handler = FluidUtil.getFluidHandler(world, pos, side);
+			if (handler.isPresent()) {
+				return FluidUtil.tryFillContainer(container, handler.orElse(EmptyFluidHandler.INSTANCE), Integer.MAX_VALUE, player, true);
 			}
 		}
+
 		return FluidActionResult.FAILURE;
 	}
 

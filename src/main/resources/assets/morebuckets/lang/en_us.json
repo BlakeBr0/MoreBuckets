@@ -21,10 +21,6 @@
   "item.morebuckets.supremium_bucket": "Supremium Bucket",
   "item.morebuckets.insanium_bucket": "Insanium Bucket",
 
-  "item.morebuckets.ardite_bucket": "Ardite Bucket",
-  "item.morebuckets.cobalt_bucket": "Cobalt Bucket",
-  "item.morebuckets.manyullyn_bucket": "Manyullyn Bucket",
-
   "tooltip.morebuckets.empty": "Empty",
   "tooltip.morebuckets.buckets": "%s/%s - %s"
 }
