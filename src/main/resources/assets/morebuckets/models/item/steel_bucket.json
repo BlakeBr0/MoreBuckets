@@ -3,7 +3,7 @@
   "loader": "forge:bucket",
   "fluid": "water",
   "textures": {
-    "base": "morebuckets:item/quartz_bucket",
+    "base": "morebuckets:item/steel_bucket",
     "fluid": "forge:item/mask/bucket_fluid"
   }
 }
