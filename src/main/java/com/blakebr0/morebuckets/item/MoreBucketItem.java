@@ -9,21 +9,27 @@ import com.blakebr0.cucumber.iface.IFluidHolder;
 import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.morebuckets.MoreBuckets;
 import com.blakebr0.morebuckets.lib.ModTooltips;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.IBucketPickupHandler;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Rarity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
@@ -32,14 +38,11 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.DispenseFluidContainer;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.EmptyFluidHandler;
 
 import java.util.List;
 
@@ -126,8 +129,6 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
 		ItemStack stack = player.getHeldItem(hand);
 		FluidStack fluid = this.getFluid(stack);
-
-		this.fill(stack, new FluidStack(Fluids.WATER, 1000), true);
 
 		ActionResult<ItemStack> pickup = this.tryPickupFluid(stack, world, player);
 
@@ -275,33 +276,27 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 		BlockPos pos = blockTrace.getPos();
 		if (world.isBlockModifiable(player, pos)) {
 			Direction face = blockTrace.getFace();
-			if (player.canPlayerEdit(pos.offset(face), face, stack)) {
-				FluidActionResult result = this.tryPickUpFluid(stack, player, world, pos, face);
-				if (result.isSuccess() && !player.isCreative()) {
+			BlockState state = world.getBlockState(pos);
+			Block block = state.getBlock();
+			if (block instanceof IBucketPickupHandler && player.canPlayerEdit(pos.offset(face), face, stack)) {
+				Fluid fluid = ((IBucketPickupHandler) block).pickupFluid(world, pos, state);
+				if (fluid != Fluids.EMPTY) {
 					player.addStat(Stats.ITEM_USED.get(this));
-					return new ActionResult<>(ActionResultType.SUCCESS, result.getResult());
+
+					SoundEvent soundevent = this.getFluid(stack).getFluid().getAttributes().getEmptySound();
+					if (soundevent == null) soundevent = fluid.isIn(FluidTags.LAVA) ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL;
+					player.playSound(soundevent, 1.0F, 1.0F);
+					this.fill(stack, new FluidStack(fluid, 1000), true);
+					if (!world.isRemote()) {
+						CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayerEntity) player, new ItemStack(fluid.getFilledBucket()));
+					}
+
+					return new ActionResult<>(ActionResultType.SUCCESS, stack);
 				}
 			}
 		}
 
 		return new ActionResult<>(ActionResultType.FAIL, stack);
-	}
-
-	public FluidActionResult tryPickUpFluid(ItemStack container, PlayerEntity player, World world, BlockPos pos, Direction side) {
-		if (container.isEmpty() || world == null || pos == null)
-			return FluidActionResult.FAILURE;
-
-		BlockState state = world.getBlockState(pos);
-		Block block = state.getBlock();
-
-		if (block instanceof IBucketPickupHandler) {
-			LazyOptional<IFluidHandler> handler = FluidUtil.getFluidHandler(world, pos, side);
-			if (handler.isPresent()) {
-				return FluidUtil.tryFillContainer(container, handler.orElse(EmptyFluidHandler.INSTANCE), Integer.MAX_VALUE, player, true);
-			}
-		}
-
-		return FluidActionResult.FAILURE;
 	}
 
 	@Override
