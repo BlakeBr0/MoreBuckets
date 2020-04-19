@@ -20,6 +20,7 @@ sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = co
 repositories {
     maven { url "http://dvs1.progwml6.com/files/maven/" }
     maven { url "http://tehnut.info/maven/" }
+
     mavenLocal()
     jcenter()
 }
