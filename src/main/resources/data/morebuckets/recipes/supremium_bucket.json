@@ -1,0 +1,21 @@
+{
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "mysticalagriculture"
+    }
+  ],
+  "type": "crafting_shaped",
+  "pattern": [
+    "M M",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "item": "mysticalagriculture:supremium_ingot"
+    }
+  },
+  "result": {
+    "item": "morebuckets:supremium_bucket"
+  }
+}

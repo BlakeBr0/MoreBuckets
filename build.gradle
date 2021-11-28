@@ -1,59 +1,126 @@
 buildscript {
     repositories {
-        jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = 'https://maven.minecraftforge.net/' }
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
-version = "1.0.4"
-group = "com.blakebr0.morebuckets" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "MoreBuckets-1.12.2"
+version = '1.12.2-1.0.4'
+group = 'com.blakebr0.morebuckets'
+archivesBaseName = 'MoreBuckets'
 
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+
+repositories {
+    maven { url 'https://dvs1.progwml6.com/files/maven/' }
+    maven {
+        url 'https://cursemaven.com'
+        content {
+            includeGroup 'curse.maven'
+        }
+    }
 }
 
 minecraft {
-    version = "1.12.2-14.23.4.2718"
-    runDir = "run"
-    replace '${version}', project.version
-    
-    mappings = "snapshot_20171003"
-    makeObfSourceJar = false
-}
+    mappings channel: 'official', version: '1.17.1'
 
-repositories {
-    maven {
-        url = "http://dvs1.progwml6.com/files/maven"
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            ideaModule "${rootProject.name}.${project.name}.main"
+
+            mods {
+                morebuckets {
+                    source sourceSets.main
+                }
+
+                cucumber {
+                    source project(':Cucumber').sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            ideaModule "${rootProject.name}.${project.name}.main"
+
+            mods {
+                morebuckets {
+                    source sourceSets.main
+                }
+
+                cucumber {
+                    source project(':Cucumber').sourceSets.main
+                }
+            }
+        }
     }
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12.2:4.10.0.198:api"
-    runtime "mezz.jei:jei_1.12.2:4.10.0.198"
+    minecraft 'net.minecraftforge:forge:1.17.1-37.0.103'
+
+    implementation project(':Cucumber')
+
+    compileOnly fg.deobf('mezz.jei:jei-1.17.1:8.0.0.14:api')
+
+    runtimeOnly fg.deobf('mezz.jei:jei-1.17.1:8.0.0.14')
+    runtimeOnly fg.deobf('curse.maven:jade-324717:3447700')
 }
 
-processResources {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+jar {
+    manifest {
+        attributes([
+                'Specification-Title': 'More Buckets',
+                'Specification-Vendor': 'BlakeBr0',
+                'Specification-Version': '1',
+                'Implementation-Title': project.name,
+                'Implementation-Version': "${version.split('-').last()}",
+                'Implementation-Vendor' : 'BlakeBr0',
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
     }
-        
-    // copy everything else except the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+}
+
+jar.finalizedBy('reobfJar')
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact jar
+        }
+    }
+
+    repositories {
+        maven {
+            url = 'https://maven.blakesmods.com'
+
+            credentials {
+                username = System.getenv('BLAKESMODS_MAVEN_USERNAME')
+                password = System.getenv('BLAKESMODS_MAVEN_PASSWORD')
+            }
+
+            authentication {
+                basic(BasicAuthentication)
+            }
+        }
     }
 }

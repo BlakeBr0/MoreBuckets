@@ -1,0 +1,24 @@
+{
+  "type": "crafting_shaped",
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:tag_empty",
+        "tag": "forge:ingots/steel"
+      }
+    }
+  ],
+  "pattern": [
+    "M M",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "forge:ingots/steel"
+    }
+  },
+  "result": {
+    "item": "morebuckets:steel_bucket"
+  }
+}

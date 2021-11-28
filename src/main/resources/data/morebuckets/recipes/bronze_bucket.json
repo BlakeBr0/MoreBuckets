@@ -1,0 +1,24 @@
+{
+  "type": "crafting_shaped",
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:tag_empty",
+        "tag": "forge:ingots/bronze"
+      }
+    }
+  ],
+  "pattern": [
+    "M M",
+    " M "
+  ],
+  "key": {
+    "M": {
+      "tag": "forge:ingots/bronze"
+    }
+  },
+  "result": {
+    "item": "morebuckets:bronze_bucket"
+  }
+}

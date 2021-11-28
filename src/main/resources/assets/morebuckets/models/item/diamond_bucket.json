@@ -1,0 +1,9 @@
+{
+  "parent": "forge:item/default",
+  "loader": "forge:bucket",
+  "fluid": "water",
+  "textures": {
+    "base": "morebuckets:item/diamond_bucket",
+    "fluid": "forge:item/mask/bucket_fluid"
+  }
+}
