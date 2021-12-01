@@ -4,9 +4,9 @@ import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.morebuckets.MoreBuckets;
 import com.blakebr0.morebuckets.item.MoreBucketItem;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
