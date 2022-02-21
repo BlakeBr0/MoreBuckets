@@ -1,5 +1,6 @@
 package com.blakebr0.morebuckets;
 
+import com.blakebr0.morebuckets.init.ModItems;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -19,6 +20,8 @@ public class MoreBuckets {
 		var bus = FMLJavaModLoadingContext.get().getModEventBus();
 
 		bus.register(this);
+
+		ModItems.REGISTRY.register(bus);
 	}
 
 	@SubscribeEvent

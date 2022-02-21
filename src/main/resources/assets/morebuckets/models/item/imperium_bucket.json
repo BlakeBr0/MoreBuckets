@@ -1,7 +1,7 @@
 {
   "parent": "forge:item/default",
   "loader": "forge:bucket",
-  "fluid": "water",
+  "fluid": "empty",
   "textures": {
     "base": "morebuckets:item/imperium_bucket",
     "fluid": "forge:item/mask/bucket_fluid"
