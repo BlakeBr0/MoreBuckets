@@ -3,33 +3,33 @@ loaderVersion="[40,)"
 license="MIT"
 
 [[mods]]
-  issueTrackerURL="https://github.com/BlakeBr0/MoreBuckets/issues"
-  modId="morebuckets"
-  version="${file.jarVersion}"
-  displayName="More Buckets"
-  displayURL="https://www.curseforge.com/minecraft/mc-mods/more-buckets"
-  #logoFile="examplemod.png"
-  authors="BlakeBr0"
-  credits="thorgot"
-  description='''
-  Adds a bunch of new buckets.
-  '''
+    issueTrackerURL="https://github.com/BlakeBr0/MoreBuckets/issues"
+    modId="morebuckets"
+    version="${file.jarVersion}"
+    displayName="More Buckets"
+    displayURL="https://blakesmods.com/more-buckets"
+    # logoFile="examplemod.png"
+    authors="BlakeBr0"
+    credits="thorgot"
+    description='''
+    Adds a bunch of new buckets.
+    '''
 
-  [[dependencies.morebuckets]]
-      modId="forge"
-      mandatory=true
-      versionRange="[40.0,)"
-      ordering="NONE"
-      side="BOTH"
-  [[dependencies.morebuckets]]
-      modId="minecraft"
-      mandatory=true
-      versionRange="[1.18,1.19]"
-      ordering="NONE"
-      side="BOTH"
-  [[dependencies.morebuckets]]
-      modId="cucumber"
-      mandatory=true
-      versionRange="[5.1.0,)"
-      ordering="NONE"
-      side="BOTH"
+    [[dependencies.morebuckets]]
+        modId="forge"
+        mandatory=true
+        versionRange="[40.0.12,)"
+        ordering="NONE"
+        side="BOTH"
+    [[dependencies.morebuckets]]
+        modId="minecraft"
+        mandatory=true
+        versionRange="[1.18.2,1.19]"
+        ordering="NONE"
+        side="BOTH"
+    [[dependencies.morebuckets]]
+        modId="cucumber"
+        mandatory=true
+        versionRange="[5.1.0,)"
+        ordering="NONE"
+        side="BOTH"
