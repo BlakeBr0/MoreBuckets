@@ -6,14 +6,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Mod(MoreBuckets.MOD_ID)
 public class MoreBuckets {
 	public static final String MOD_ID = "morebuckets";
 	public static final String NAME = "More Buckets";
-	public static final Logger LOGGER = LogManager.getLogger(NAME);
+	public static final Logger LOGGER = LoggerFactory.getLogger(NAME);
 	public static final CreativeModeTab CREATIVE_TAB = new MBCreativeTab();
 
 	public MoreBuckets() {

@@ -9,24 +9,23 @@ import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.morebuckets.lib.ModTooltips;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.ModList;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -73,31 +72,40 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 		return copy;
 	}
 
-	// TODO: durability
-//	@Override
-//	public boolean showDurabilityBar(ItemStack stack) {
-//		return this.getCapacity(stack) > 1000;
-//	}
-//
-//	@Override
-//	public double getDurabilityForDisplay(ItemStack stack) {
-//		int capacity = this.getCapacity(stack);
-//		double stored = capacity - BucketHelper.getFluidAmount(stack);
-//		return stored / capacity;
-//	}
-//
-	// TODO: burn time
-//	@Override
-//	public int getItemBurnTime(ItemStack stack) {
-//		var fluid = this.getFluid(stack);
-//		if (fluid != null && fluid.isFluidEqual(new FluidStack(FluidRegistry.LAVA, 1000))) {
-//			if (FluidHelper.getFluidAmount(stack) >= 1000) {
-//				return 20000;
-//			}
-//		}
-//
-//		return -1;
-//	}
+	@Override
+	public int getBarWidth(ItemStack stack) {
+		int capacity = this.getCapacity(stack);
+		int stored = capacity - FluidHelper.getFluidAmount(stack);
+
+		return Math.round(13.0F - stored * 13.0F / (float) capacity);
+	}
+
+	@Override
+	public int getBarColor(ItemStack stack) {
+		int capacity = this.getCapacity(stack);
+		int stored = capacity - FluidHelper.getFluidAmount(stack);
+
+		float f = Math.max(0.0F, (float) stored / (float) capacity);
+
+		return Mth.hsvToRgb(f / 3.0F, 1.0F, 1.0F);
+	}
+
+	@Override
+	public boolean isBarVisible(ItemStack stack) {
+		return this.getCapacity(stack) > FluidAttributes.BUCKET_VOLUME;
+	}
+
+	@Override
+	public int getBurnTime(ItemStack stack, RecipeType<?> type) {
+		var fluid = this.getFluid(stack);
+		if (fluid != null && fluid.isFluidEqual(new FluidStack(Fluids.LAVA, 1000))) {
+			if (FluidHelper.getFluidAmount(stack) >= 1000) {
+				return 20000;
+			}
+		}
+
+		return -1;
+	}
 
 	@Override
 	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
@@ -223,6 +231,11 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 		return fluid;
 	}
 
+	@Override
+	public boolean isEnabled() {
+		return this.requiredMods.length == 0 || Arrays.stream(this.requiredMods).anyMatch(ModList.get()::isLoaded);
+	}
+
 	public int getSpaceLeft(ItemStack stack) {
 		return this.getCapacity(stack) - FluidHelper.getFluidAmount(stack);
 	}
@@ -273,10 +286,5 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 		}
 
 		return InteractionResultHolder.fail(stack);
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return this.requiredMods.length == 0 || Arrays.stream(this.requiredMods).anyMatch(ModList.get()::isLoaded);
 	}
 }

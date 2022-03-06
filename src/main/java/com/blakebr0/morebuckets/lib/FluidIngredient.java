@@ -1,10 +1,8 @@
 package com.blakebr0.morebuckets.lib;
 
-import com.blakebr0.cucumber.helper.FluidHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
 
 import java.util.stream.Stream;
 

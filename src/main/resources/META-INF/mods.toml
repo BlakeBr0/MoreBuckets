@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[38,)"
+loaderVersion="[40,)"
 license="MIT"
 
 [[mods]]
@@ -18,7 +18,7 @@ license="MIT"
   [[dependencies.morebuckets]]
       modId="forge"
       mandatory=true
-      versionRange="[38.0,)"
+      versionRange="[40.0,)"
       ordering="NONE"
       side="BOTH"
   [[dependencies.morebuckets]]
@@ -30,6 +30,6 @@ license="MIT"
   [[dependencies.morebuckets]]
       modId="cucumber"
       mandatory=true
-      versionRange="[5.0.0,)"
+      versionRange="[5.1.0,)"
       ordering="NONE"
       side="BOTH"
