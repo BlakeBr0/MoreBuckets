@@ -1,7 +1,9 @@
 package com.blakebr0.morebuckets;
 
+import com.blakebr0.morebuckets.crafting.RecipeFixer;
 import com.blakebr0.morebuckets.init.ModItems;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -25,5 +27,7 @@ public class MoreBuckets {
 	}
 
 	@SubscribeEvent
-	public void onCommonSetup(FMLCommonSetupEvent event) { }
+	public void onCommonSetup(FMLCommonSetupEvent event) {
+		MinecraftForge.EVENT_BUS.register(new RecipeFixer());
+	}
 }

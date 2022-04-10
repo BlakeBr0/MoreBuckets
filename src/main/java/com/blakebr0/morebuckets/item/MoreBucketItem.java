@@ -3,12 +3,18 @@ package com.blakebr0.morebuckets.item;
 import com.blakebr0.cucumber.fluid.FluidHolderItemWrapper;
 import com.blakebr0.cucumber.helper.FluidHelper;
 import com.blakebr0.cucumber.helper.NBTHelper;
+import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.iface.IFluidHolder;
 import com.blakebr0.cucumber.item.BaseItem;
+import com.blakebr0.morebuckets.crafting.RecipeFixer;
 import com.blakebr0.morebuckets.lib.ModTooltips;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.BlockSource;
+import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -19,12 +25,16 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.ModList;
 
 import java.util.Arrays;
@@ -32,109 +42,111 @@ import java.util.List;
 import java.util.function.Function;
 
 public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableable {
-	private final int capacity;
-	private final String[] requiredMods;
+    private final int capacity;
+    private final String[] requiredMods;
 
-	public MoreBucketItem(int capacity, Function<Properties, Properties> properties) {
-		this(capacity, true, properties);
-	}
-	
-	public MoreBucketItem(int capacity, Function<Properties, Properties> properties, String... requiredMods) {
-		this(capacity, true, properties, requiredMods);
-	}
-	
-	public MoreBucketItem(int capacity, boolean recipeReplacement, Function<Properties, Properties> properties, String... requiredMods) {
-		super(properties.compose(p -> p.stacksTo(1)));
-		this.capacity = capacity;
-		this.requiredMods = requiredMods;
-//
-//		if (this.isEnabled()) {
-//			BlockDispenser.DISPENSE_BEHAVIOR_REGISTRY.putObject(this, DispenseBucketBehavior.getInstance());
-//
-//			if (recipeReplacement) {
-//				RecipeFixer.VALID_BUCKETS.add(this);
-//			}
-//		}
-	}
+    public MoreBucketItem(int capacity, Function<Properties, Properties> properties) {
+        this(capacity, true, properties);
+    }
 
-	@Override
-	public boolean hasContainerItem(ItemStack stack) {
-		return FluidHelper.getFluidAmount(stack) > 0;
-	}
+    public MoreBucketItem(int capacity, Function<Properties, Properties> properties, String... requiredMods) {
+        this(capacity, true, properties, requiredMods);
+    }
 
-	@Override
-	public ItemStack getContainerItem(ItemStack stack) {
-		var copy = new ItemStack(this);
-		copy.setTag(stack.getTag());
+    public MoreBucketItem(int capacity, boolean recipeReplacement, Function<Properties, Properties> properties, String... requiredMods) {
+        super(properties.compose(p -> p.stacksTo(1)));
+        this.capacity = capacity;
+        this.requiredMods = requiredMods;
 
-		this.drain(copy, FluidAttributes.BUCKET_VOLUME, true);
+        DispenserBlock.registerBehavior(this, new DispenserBehavior());
 
-		return copy;
-	}
+        if (recipeReplacement && this.isEnabled()) {
+            RecipeFixer.VALID_BUCKETS.add(this);
+        }
+    }
 
-	@Override
-	public int getBarWidth(ItemStack stack) {
-		int capacity = this.getCapacity(stack);
-		int stored = capacity - FluidHelper.getFluidAmount(stack);
+    @Override
+    public boolean hasContainerItem(ItemStack stack) {
+        return FluidHelper.getFluidAmount(stack) > 0;
+    }
 
-		return Math.round(13.0F - stored * 13.0F / (float) capacity);
-	}
+    @Override
+    public ItemStack getContainerItem(ItemStack stack) {
+        var copy = new ItemStack(this);
+        copy.setTag(stack.getTag());
 
-	@Override
-	public int getBarColor(ItemStack stack) {
-		int capacity = this.getCapacity(stack);
-		int stored = capacity - FluidHelper.getFluidAmount(stack);
+        this.drain(copy, FluidAttributes.BUCKET_VOLUME, true);
 
-		float f = Math.max(0.0F, (float) stored / (float) capacity);
+        return copy;
+    }
 
-		return Mth.hsvToRgb(f / 3.0F, 1.0F, 1.0F);
-	}
+    @Override
+    public int getBarWidth(ItemStack stack) {
+        int capacity = this.getCapacity(stack);
+        int stored = capacity - FluidHelper.getFluidAmount(stack);
 
-	@Override
-	public boolean isBarVisible(ItemStack stack) {
-		return this.getCapacity(stack) > FluidAttributes.BUCKET_VOLUME;
-	}
+        return Math.round(13.0F - stored * 13.0F / (float) capacity);
+    }
 
-	@Override
-	public int getBurnTime(ItemStack stack, RecipeType<?> type) {
-		var fluid = this.getFluid(stack);
-		if (fluid != null && fluid.isFluidEqual(new FluidStack(Fluids.LAVA, 1000))) {
-			if (FluidHelper.getFluidAmount(stack) >= 1000) {
-				return 20000;
-			}
-		}
+    @Override
+    public int getBarColor(ItemStack stack) {
+        int capacity = this.getCapacity(stack);
+        int stored = FluidHelper.getFluidAmount(stack);
 
-		return -1;
-	}
+        float f = Math.max(0.0F, (float) stored / (float) capacity);
 
-	@Override
-	public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
-		int capacity = this.getCapacity(stack) / 1000;
-		int buckets = FluidHelper.getFluidAmount(stack) / 1000;
-		var fluid = FluidHelper.getFluidFromStack(stack);
+        return Mth.hsvToRgb(f / 3.0F, 1.0F, 1.0F);
+    }
 
-		tooltip.add(ModTooltips.BUCKETS.args(buckets, capacity, fluid.getDisplayName()).build());
-	}
+    @Override
+    public boolean isBarVisible(ItemStack stack) {
+        return this.getCapacity(stack) > FluidAttributes.BUCKET_VOLUME;
+    }
 
-	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-		var stack = player.getItemInHand(hand);
-		var fluid = this.getFluid(stack);
+    @Override
+    public int getBurnTime(ItemStack stack, RecipeType<?> type) {
+        var fluid = this.getFluid(stack);
+        if (fluid != null && fluid.isFluidEqual(new FluidStack(Fluids.LAVA, 1000))) {
+            if (FluidHelper.getFluidAmount(stack) >= 1000) {
+                return 20000;
+            }
+        }
 
-		var pickup = this.tryPickupFluid(stack, level, player, hand);
+        return -1;
+    }
 
-		if (pickup.getResult() == InteractionResult.SUCCESS) {
-			return pickup;
-		} else {
-			if (fluid != null && fluid.getAmount() >= FluidAttributes.BUCKET_VOLUME) {
-				return this.tryPlaceFluid(stack, level, player, hand);
-			} else {
-				return InteractionResultHolder.fail(stack);
-			}
-		}
-	}
+    @Override
+    public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
+        int capacity = this.getCapacity(stack) / 1000;
+        int buckets = FluidHelper.getFluidAmount(stack) / 1000;
+        var fluid = FluidHelper.getFluidFromStack(stack);
 
-	// TODO: milk
+        if (fluid.isEmpty()) {
+            tooltip.add(ModTooltips.EMPTY.build());
+        } else {
+            tooltip.add(ModTooltips.BUCKETS.args(buckets, capacity, fluid.getDisplayName()).build());
+        }
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        var stack = player.getItemInHand(hand);
+        var fluid = this.getFluid(stack);
+
+        var pickup = this.tryPickupFluid(stack, level, player, hand);
+
+        if (pickup.getResult() == InteractionResult.SUCCESS) {
+            return pickup;
+        } else {
+            if (fluid != null && fluid.getAmount() >= FluidAttributes.BUCKET_VOLUME) {
+                return this.tryPlaceFluid(stack, level, player, hand);
+            } else {
+                return InteractionResultHolder.fail(stack);
+            }
+        }
+    }
+
+    // TODO: milk
 //	@Override
 //	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
 //		if (target instanceof EntityCow) {
@@ -148,143 +160,194 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 //		return false;
 //	}
 
-	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag tag) {
-		return new FluidHolderItemWrapper(stack, this);
-	}
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag tag) {
+        return new FluidHolderItemWrapper(stack, this);
+    }
 
-	@Override
-	public int getCapacity(ItemStack stack) {
-		return this.capacity;
-	}
+    @Override
+    public int getCapacity(ItemStack stack) {
+        return this.capacity;
+    }
 
-	@Override
-	public FluidStack getFluid(ItemStack stack) {
-		return FluidHelper.getFluidFromStack(stack);
-	}
+    @Override
+    public FluidStack getFluid(ItemStack stack) {
+        return FluidHelper.getFluidFromStack(stack);
+    }
 
-	@Override
-	public int fill(ItemStack stack, FluidStack fluid, boolean canFill) {
-		NBTHelper.validateCompound(stack);
+    @Override
+    public int fill(ItemStack stack, FluidStack fluid, boolean canFill) {
+        NBTHelper.validateCompound(stack);
 
-		var bucketFluid = this.getFluid(stack);
-		if (!bucketFluid.isEmpty() && !fluid.isFluidEqual(bucketFluid))
-			return 0;
+        var bucketFluid = this.getFluid(stack);
+        if (!bucketFluid.isEmpty() && !fluid.isFluidEqual(bucketFluid))
+            return 0;
 
-		int capacity = this.getCapacity(stack);
+        int capacity = this.getCapacity(stack);
 
-		if (!canFill) {
-			if (bucketFluid.isEmpty())
-				return FluidHelper.toBuckets(Math.min(capacity, fluid.getAmount()));
+        if (!canFill) {
+            if (bucketFluid.isEmpty())
+                return FluidHelper.toBuckets(Math.min(capacity, fluid.getAmount()));
 
-			return FluidHelper.toBuckets(Math.min(capacity - bucketFluid.getAmount(), fluid.getAmount()));
-		}
+            return FluidHelper.toBuckets(Math.min(capacity - bucketFluid.getAmount(), fluid.getAmount()));
+        }
 
-		int filled = FluidHelper.toBuckets(Math.min(fluid.getAmount(), capacity));
+        int filled = FluidHelper.toBuckets(Math.min(fluid.getAmount(), capacity));
 
-		if (bucketFluid.isEmpty()) {
-			var fluidTag = fluid.writeToNBT(new CompoundTag());
-			fluidTag.putInt("Amount", filled);
-			stack.setTag(fluidTag);
+        if (bucketFluid.isEmpty()) {
+            var fluidTag = fluid.writeToNBT(new CompoundTag());
+            fluidTag.putInt("Amount", filled);
+            stack.setTag(fluidTag);
 
-			return filled;
-		}
+            return filled;
+        }
 
-		filled = FluidHelper.toBuckets(capacity - bucketFluid.getAmount());
-		int amount = FluidHelper.toBuckets(fluid.getAmount());
+        filled = FluidHelper.toBuckets(capacity - bucketFluid.getAmount());
+        int amount = FluidHelper.toBuckets(fluid.getAmount());
 
-		if (amount < filled) {
-			bucketFluid.grow(amount);;
-			filled = amount;
-		} else {
-			bucketFluid.setAmount(capacity);
-		}
+        if (amount < filled) {
+            bucketFluid.grow(amount);
+            ;
+            filled = amount;
+        } else {
+            bucketFluid.setAmount(capacity);
+        }
 
-		bucketFluid.writeToNBT(stack.getTag());
+        bucketFluid.writeToNBT(stack.getTag());
 
-		return filled;
-	}
+        return filled;
+    }
 
-	@Override
-	public FluidStack drain(ItemStack stack, int amount, boolean canDrain) {
-		NBTHelper.validateCompound(stack);
+    @Override
+    public FluidStack drain(ItemStack stack, int amount, boolean canDrain) {
+        NBTHelper.validateCompound(stack);
 
-		if (amount == 0) return FluidStack.EMPTY;
+        if (amount == 0) return FluidStack.EMPTY;
 
-		var fluid = this.getFluid(stack);
-		if (fluid.isEmpty()) return FluidStack.EMPTY;
+        var fluid = this.getFluid(stack);
+        if (fluid.isEmpty()) return FluidStack.EMPTY;
 
-		int drained = FluidHelper.toBuckets(Math.min(fluid.getAmount(), amount));
+        int drained = FluidHelper.toBuckets(Math.min(fluid.getAmount(), amount));
 
-		if (canDrain) {
-			if (amount >= fluid.getAmount()) {
-				NBTHelper.removeTag(stack, "FluidName");
-				NBTHelper.removeTag(stack, "Amount");
-				return fluid;
-			}
+        if (canDrain) {
+            if (amount >= fluid.getAmount()) {
+                NBTHelper.removeTag(stack, "FluidName");
+                NBTHelper.removeTag(stack, "Amount");
+                return fluid;
+            }
 
-			fluid.shrink(drained);
-			fluid.writeToNBT(stack.getTag());
-		}
+            fluid.shrink(drained);
+            fluid.writeToNBT(stack.getTag());
+        }
 
-		fluid.setAmount(drained);
-		return fluid;
-	}
+        fluid.setAmount(drained);
+        return fluid;
+    }
 
-	@Override
-	public boolean isEnabled() {
-		return this.requiredMods.length == 0 || Arrays.stream(this.requiredMods).anyMatch(ModList.get()::isLoaded);
-	}
+    @Override
+    public boolean isEnabled() {
+        return this.requiredMods.length == 0 || Arrays.stream(this.requiredMods).anyMatch(ModList.get()::isLoaded);
+    }
 
-	public int getSpaceLeft(ItemStack stack) {
-		return this.getCapacity(stack) - FluidHelper.getFluidAmount(stack);
-	}
+    public int getSpaceLeft(ItemStack stack) {
+        return this.getCapacity(stack) - FluidHelper.getFluidAmount(stack);
+    }
 
-	private InteractionResultHolder<ItemStack> tryPlaceFluid(ItemStack stack, Level level, Player player, InteractionHand hand) {
-		if (FluidHelper.getFluidAmount(stack) < FluidAttributes.BUCKET_VOLUME)
-			return InteractionResultHolder.pass(stack);
+    private InteractionResultHolder<ItemStack> tryPlaceFluid(ItemStack stack, Level level, Player player, InteractionHand hand) {
+        if (FluidHelper.getFluidAmount(stack) < FluidAttributes.BUCKET_VOLUME)
+            return InteractionResultHolder.pass(stack);
 
-		var trace = getPlayerPOVHitResult(level, player, ClipContext.Fluid.NONE);
-		if (trace.getType() != HitResult.Type.BLOCK)
-			return InteractionResultHolder.pass(stack);
+        var trace = getPlayerPOVHitResult(level, player, ClipContext.Fluid.NONE);
+        if (trace.getType() != HitResult.Type.BLOCK)
+            return InteractionResultHolder.pass(stack);
 
-		var pos = trace.getBlockPos();
-		if (level.mayInteract(player, pos)) {
-			var targetPos = pos.relative(trace.getDirection());
+        var pos = trace.getBlockPos();
+        if (level.mayInteract(player, pos)) {
+            var targetPos = pos.relative(trace.getDirection());
 
-			if (player.mayUseItemAt(targetPos, trace.getDirection().getOpposite(), stack)) {
-				var result = FluidUtil.tryPlaceFluid(player, level, hand, targetPos, stack, new FluidStack(this.getFluid(stack), FluidAttributes.BUCKET_VOLUME));
-				if (result.isSuccess() && !player.getAbilities().instabuild) {
-//					player.addStat(StatList.getObjectUseStats(this));
-					return InteractionResultHolder.success(result.getResult());
-				}
-			}
-		}
+            if (player.mayUseItemAt(targetPos, trace.getDirection().getOpposite(), stack)) {
+                var result = FluidUtil.tryPlaceFluid(player, level, hand, targetPos, stack, new FluidStack(this.getFluid(stack), FluidAttributes.BUCKET_VOLUME));
+                if (result.isSuccess() && !player.getAbilities().instabuild) {
+                    if (!level.isClientSide()) {
+                        CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayer) player, stack);
+                    }
 
-		return InteractionResultHolder.fail(stack);
-	}
+                    return InteractionResultHolder.success(result.getResult());
+                }
+            }
+        }
 
-	private InteractionResultHolder<ItemStack> tryPickupFluid(ItemStack stack, Level level, Player player, InteractionHand hand) {
-		if (this.getSpaceLeft(stack) < FluidAttributes.BUCKET_VOLUME)
-			return InteractionResultHolder.pass(stack);
+        return InteractionResultHolder.fail(stack);
+    }
 
-		var trace = getPlayerPOVHitResult(level, player, ClipContext.Fluid.SOURCE_ONLY);
-		if (trace.getType() != HitResult.Type.BLOCK)
-			return InteractionResultHolder.pass(stack);
+    private InteractionResultHolder<ItemStack> tryPickupFluid(ItemStack stack, Level level, Player player, InteractionHand hand) {
+        if (this.getSpaceLeft(stack) < FluidAttributes.BUCKET_VOLUME)
+            return InteractionResultHolder.pass(stack);
 
-		var pos = trace.getBlockPos();
-		if (level.mayInteract(player, pos)) {
-			var direction = trace.getDirection();
-			if (player.mayUseItemAt(pos, direction, stack)) {
-				var result = FluidUtil.tryPickUpFluid(stack, player, level, pos, direction);
+        var trace = getPlayerPOVHitResult(level, player, ClipContext.Fluid.SOURCE_ONLY);
+        if (trace.getType() != HitResult.Type.BLOCK)
+            return InteractionResultHolder.pass(stack);
 
-				if (result.isSuccess() && !player.getAbilities().instabuild) {
-//					player.addStat(StatList.getObjectUseStats(this));
-					return InteractionResultHolder.success(result.getResult());
-				}
-			}
-		}
+        var pos = trace.getBlockPos();
+        if (level.mayInteract(player, pos)) {
+            var direction = trace.getDirection();
+            if (player.mayUseItemAt(pos, direction, stack)) {
+                var result = FluidUtil.tryPickUpFluid(stack, player, level, pos, direction);
 
-		return InteractionResultHolder.fail(stack);
-	}
+                if (result.isSuccess() && !player.getAbilities().instabuild) {
+                    if (!level.isClientSide()) {
+                        CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayer) player, stack);
+                    }
+
+                    return InteractionResultHolder.success(result.getResult());
+                }
+            }
+        }
+
+        return InteractionResultHolder.fail(stack);
+    }
+
+    private static class DispenserBehavior extends OptionalDispenseItemBehavior {
+        @Override
+        protected ItemStack execute(BlockSource source, ItemStack stack) {
+            var level = source.getLevel();
+            var facing = source.getBlockState().getValue(DispenserBlock.FACING);
+            var pos = source.getPos().relative(facing);
+
+            var action = FluidUtil.tryPickUpFluid(stack, null, level, pos, facing.getOpposite());
+            var resultStack = action.getResult();
+
+            if (!action.isSuccess() || resultStack.isEmpty()) {
+                var singleStack = StackHelper.withSize(stack, 1, false);
+
+                var fluidHandler = FluidUtil.getFluidHandler(singleStack).resolve();
+                if (fluidHandler.isEmpty()) return super.execute(source, stack);
+
+                var fluidStack = fluidHandler.get().drain(FluidAttributes.BUCKET_VOLUME, IFluidHandler.FluidAction.EXECUTE);
+                var result = !fluidStack.isEmpty() ? FluidUtil.tryPlaceFluid(null, level, InteractionHand.MAIN_HAND, pos, stack, fluidStack) : FluidActionResult.FAILURE;
+
+                if (result.isSuccess()) {
+                    var drainedStack = result.getResult();
+
+                    if (drainedStack.getCount() == 1) {
+                        return drainedStack;
+                    } else if (!drainedStack.isEmpty() && ((DispenserBlockEntity) source.getEntity()).addItem(drainedStack) < 0) {
+                        this.dispense(source, drainedStack);
+                    }
+
+                    return StackHelper.shrink(drainedStack, 1, false);
+                } else {
+                    return this.dispense(source, stack);
+                }
+            } else {
+                if (stack.getCount() == 1) {
+                    return resultStack;
+                } else if (((DispenserBlockEntity) source.getEntity()).addItem(resultStack) < 0) {
+                    this.dispense(source, resultStack);
+                }
+            }
+
+            return resultStack;
+        }
+    }
 }
