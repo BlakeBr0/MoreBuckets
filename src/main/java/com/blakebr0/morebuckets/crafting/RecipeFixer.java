@@ -8,6 +8,12 @@ import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.AbstractIngredient;
+import net.minecraftforge.common.crafting.CompoundIngredient;
+import net.minecraftforge.common.crafting.DifferenceIngredient;
+import net.minecraftforge.common.crafting.IntersectionIngredient;
+import net.minecraftforge.common.crafting.MultiItemValue;
+import net.minecraftforge.common.crafting.NBTIngredient;
+import net.minecraftforge.common.crafting.PartialNBTIngredient;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,12 +33,12 @@ public class RecipeFixer implements ResourceManagerReloadListener {
 
             for (int i = 0; i < ingredients.size(); i++) {
                 var ingredient = ingredients.get(i);
-                if (!ingredient.getClass().equals(Ingredient.class) && !(ingredient instanceof AbstractIngredient))
+                if (!ingredient.getClass().equals(Ingredient.class) && !isForgeIngredient(ingredient.getClass()))
                     continue;
 
                 for (var value : ingredient.values) {
                     // we want to avoid initializing tag ingredients
-                    if (value instanceof Ingredient.ItemValue) {
+                    if (value instanceof Ingredient.ItemValue || value instanceof MultiItemValue) {
                         for (var stack : value.getItems()) {
                             var item = stack.getItem();
                             if (item instanceof BucketItem || item instanceof IFluidHandler) {
@@ -49,5 +55,13 @@ public class RecipeFixer implements ResourceManagerReloadListener {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onAddReloadListeners(AddReloadListenerEvent event) {
         event.addListener(this);
+    }
+
+    private static boolean isForgeIngredient(Class<?> clazz) {
+        return clazz.equals(CompoundIngredient.class)
+                || clazz.equals(DifferenceIngredient.class)
+                || clazz.equals(IntersectionIngredient.class)
+                || clazz.equals(NBTIngredient.class)
+                || clazz.equals(PartialNBTIngredient.class);
     }
 }
