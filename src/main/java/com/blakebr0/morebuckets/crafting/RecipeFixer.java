@@ -8,7 +8,7 @@ import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.common.crafting.NBTIngredient;
+import net.minecraftforge.common.crafting.AbstractIngredient;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -28,14 +28,19 @@ public class RecipeFixer implements ResourceManagerReloadListener {
 
             for (int i = 0; i < ingredients.size(); i++) {
                 var ingredient = ingredients.get(i);
-                if (!ingredient.getClass().equals(Ingredient.class) && !ingredient.getClass().equals(NBTIngredient.class))
+                if (!ingredient.getClass().equals(Ingredient.class) && !ingredient.getClass().isInstance(AbstractIngredient.class))
                     continue;
 
-                for (var stack : ingredient.getItems()) {
-                    var item = stack.getItem();
-                    if (item instanceof BucketItem || item instanceof IFluidHandler) {
-                        ingredients.set(i, new FluidIngredient(ingredient));
-                        break;
+                for (var value : ingredient.values) {
+                    // we want to avoid initializing tag ingredients
+                    if (value instanceof Ingredient.ItemValue) {
+                        for (var stack : value.getItems()) {
+                            var item = stack.getItem();
+                            if (item instanceof BucketItem || item instanceof IFluidHandler) {
+                                ingredients.set(i, new FluidIngredient(ingredient));
+                                break;
+                            }
+                        }
                     }
                 }
             }
