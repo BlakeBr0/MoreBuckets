@@ -122,7 +122,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
         var fluid = FluidHelper.getFluidFromStack(stack);
 
         if (fluid.isEmpty()) {
-            tooltip.add(ModTooltips.EMPTY.build());
+            tooltip.add(ModTooltips.BUCKETS.args(buckets, capacity, ModTooltips.EMPTY.build()).build());
         } else {
             tooltip.add(ModTooltips.BUCKETS.args(buckets, capacity, fluid.getDisplayName()).build());
         }

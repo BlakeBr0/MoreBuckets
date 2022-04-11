@@ -7,7 +7,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.crafting.AbstractIngredient;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -21,14 +20,14 @@ public class RecipeFixer implements ResourceManagerReloadListener {
 
     @Override
     public void onResourceManagerReload(ResourceManager manager) {
-        var recipes = RecipeHelper.getRecipes(RecipeType.CRAFTING);
+        var recipes = RecipeHelper.getRecipeManager().getRecipes();
 
-        for (var recipe : recipes.values()) {
+        for (var recipe : recipes) {
             var ingredients = recipe.getIngredients();
 
             for (int i = 0; i < ingredients.size(); i++) {
                 var ingredient = ingredients.get(i);
-                if (!ingredient.getClass().equals(Ingredient.class) && !ingredient.getClass().isInstance(AbstractIngredient.class))
+                if (!ingredient.getClass().equals(Ingredient.class) && !(ingredient instanceof AbstractIngredient))
                     continue;
 
                 for (var value : ingredient.values) {
@@ -47,7 +46,7 @@ public class RecipeFixer implements ResourceManagerReloadListener {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.LOW)
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onAddReloadListeners(AddReloadListenerEvent event) {
         event.addListener(this);
     }
