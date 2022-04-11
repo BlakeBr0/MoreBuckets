@@ -1,6 +1,7 @@
 package com.blakebr0.morebuckets.crafting;
 
 import com.blakebr0.cucumber.helper.RecipeHelper;
+import com.blakebr0.morebuckets.config.ModConfigs;
 import com.blakebr0.morebuckets.crafting.ingredient.FluidIngredient;
 import com.blakebr0.morebuckets.item.MoreBucketItem;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -26,6 +27,9 @@ public class RecipeFixer implements ResourceManagerReloadListener {
 
     @Override
     public void onResourceManagerReload(ResourceManager manager) {
+        if (!ModConfigs.ENABLE_RECIPE_FIXER.get())
+            return;
+
         var recipes = RecipeHelper.getRecipeManager().getRecipes();
 
         for (var recipe : recipes) {
