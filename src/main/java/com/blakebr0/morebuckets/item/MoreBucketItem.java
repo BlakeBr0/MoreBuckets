@@ -31,8 +31,8 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidActionResult;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.ModList;
@@ -75,7 +75,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
         var copy = new ItemStack(this);
         copy.setTag(stack.getTag());
 
-        this.drain(copy, FluidAttributes.BUCKET_VOLUME, true);
+        this.drain(copy, FluidType.BUCKET_VOLUME, true);
 
         return copy;
     }
@@ -100,7 +100,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        return this.getCapacity(stack) > FluidAttributes.BUCKET_VOLUME;
+        return this.getCapacity(stack) > FluidType.BUCKET_VOLUME;
     }
 
     @Override
@@ -138,7 +138,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
         if (pickup.getResult() == InteractionResult.SUCCESS) {
             return pickup;
         } else {
-            if (fluid != null && fluid.getAmount() >= FluidAttributes.BUCKET_VOLUME) {
+            if (fluid != null && fluid.getAmount() >= FluidType.BUCKET_VOLUME) {
                 return this.tryPlaceFluid(stack, level, player, hand);
             } else {
                 return InteractionResultHolder.fail(stack);
@@ -254,7 +254,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
     }
 
     private InteractionResultHolder<ItemStack> tryPlaceFluid(ItemStack stack, Level level, Player player, InteractionHand hand) {
-        if (FluidHelper.getFluidAmount(stack) < FluidAttributes.BUCKET_VOLUME)
+        if (FluidHelper.getFluidAmount(stack) < FluidType.BUCKET_VOLUME)
             return InteractionResultHolder.pass(stack);
 
         var trace = getPlayerPOVHitResult(level, player, ClipContext.Fluid.NONE);
@@ -266,7 +266,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
             var targetPos = pos.relative(trace.getDirection());
 
             if (player.mayUseItemAt(targetPos, trace.getDirection().getOpposite(), stack)) {
-                var result = FluidUtil.tryPlaceFluid(player, level, hand, targetPos, stack, new FluidStack(this.getFluid(stack), FluidAttributes.BUCKET_VOLUME));
+                var result = FluidUtil.tryPlaceFluid(player, level, hand, targetPos, stack, new FluidStack(this.getFluid(stack), FluidType.BUCKET_VOLUME));
                 if (result.isSuccess() && !player.getAbilities().instabuild) {
                     if (!level.isClientSide()) {
                         CriteriaTriggers.FILLED_BUCKET.trigger((ServerPlayer) player, stack);
@@ -281,7 +281,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
     }
 
     private InteractionResultHolder<ItemStack> tryPickupFluid(ItemStack stack, Level level, Player player, InteractionHand hand) {
-        if (this.getSpaceLeft(stack) < FluidAttributes.BUCKET_VOLUME)
+        if (this.getSpaceLeft(stack) < FluidType.BUCKET_VOLUME)
             return InteractionResultHolder.pass(stack);
 
         var trace = getPlayerPOVHitResult(level, player, ClipContext.Fluid.SOURCE_ONLY);
@@ -323,7 +323,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
                 var fluidHandler = FluidUtil.getFluidHandler(singleStack).resolve();
                 if (fluidHandler.isEmpty()) return super.execute(source, stack);
 
-                var fluidStack = fluidHandler.get().drain(FluidAttributes.BUCKET_VOLUME, IFluidHandler.FluidAction.EXECUTE);
+                var fluidStack = fluidHandler.get().drain(FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.EXECUTE);
                 var result = !fluidStack.isEmpty() ? FluidUtil.tryPlaceFluid(null, level, InteractionHand.MAIN_HAND, pos, stack, fluidStack) : FluidActionResult.FAILURE;
 
                 if (result.isSuccess()) {
