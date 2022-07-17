@@ -1,4 +1,4 @@
-## More Buckets
+## More Buckets [![](http://cf.way2muchnoise.eu/full_298760_downloads.svg)](https://minecraft.curseforge.com/projects/more-buckets) 
 
 Adds some more buckets to Minecraft.
 
