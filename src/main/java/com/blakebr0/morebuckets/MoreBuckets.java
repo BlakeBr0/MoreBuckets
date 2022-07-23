@@ -3,6 +3,7 @@ package com.blakebr0.morebuckets;
 import com.blakebr0.morebuckets.config.ModConfigs;
 import com.blakebr0.morebuckets.crafting.RecipeFixer;
 import com.blakebr0.morebuckets.init.ModItems;
+import com.blakebr0.morebuckets.init.ModRecipeSerializers;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,6 +26,7 @@ public class MoreBuckets {
 		var bus = FMLJavaModLoadingContext.get().getModEventBus();
 
 		bus.register(this);
+		bus.register(new ModRecipeSerializers());
 
 		ModItems.REGISTRY.register(bus);
 
