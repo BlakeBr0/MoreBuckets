@@ -66,12 +66,12 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
     }
 
     @Override
-    public boolean hasContainerItem(ItemStack stack) {
+    public boolean hasCraftingRemainingItem(ItemStack stack) {
         return FluidHelper.getFluidAmount(stack) > 0;
     }
 
     @Override
-    public ItemStack getContainerItem(ItemStack stack) {
+    public ItemStack getCraftingRemainingItem(ItemStack stack) {
         var copy = new ItemStack(this);
         copy.setTag(stack.getTag());
 

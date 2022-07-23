@@ -8,13 +8,12 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.common.crafting.AbstractIngredient;
 import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.minecraftforge.common.crafting.DifferenceIngredient;
 import net.minecraftforge.common.crafting.IntersectionIngredient;
 import net.minecraftforge.common.crafting.MultiItemValue;
-import net.minecraftforge.common.crafting.NBTIngredient;
 import net.minecraftforge.common.crafting.PartialNBTIngredient;
+import net.minecraftforge.common.crafting.StrictNBTIngredient;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -65,7 +64,7 @@ public class RecipeFixer implements ResourceManagerReloadListener {
         return clazz.equals(CompoundIngredient.class)
                 || clazz.equals(DifferenceIngredient.class)
                 || clazz.equals(IntersectionIngredient.class)
-                || clazz.equals(NBTIngredient.class)
+                || clazz.equals(StrictNBTIngredient.class)
                 || clazz.equals(PartialNBTIngredient.class);
     }
 }
