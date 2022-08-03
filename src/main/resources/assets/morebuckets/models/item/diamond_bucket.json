@@ -1,6 +1,6 @@
 {
   "parent": "forge:item/default",
-  "loader": "forge:bucket",
+  "loader": "forge:fluid_container",
   "fluid": "empty",
   "textures": {
     "base": "morebuckets:item/diamond_bucket",
