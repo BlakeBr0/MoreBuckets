@@ -37,11 +37,14 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.ModList;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
 public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableable {
+    public static final List<MoreBucketItem> BUCKETS = new ArrayList<>();
+
     private final int capacity;
     private final String[] requiredMods;
 
@@ -63,6 +66,8 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
         if (recipeReplacement && this.isEnabled()) {
             RecipeFixer.VALID_BUCKETS.add(this);
         }
+
+        BUCKETS.add(this);
     }
 
     @Override

@@ -2,11 +2,14 @@ package com.blakebr0.morebuckets;
 
 import com.blakebr0.morebuckets.config.ModConfigs;
 import com.blakebr0.morebuckets.crafting.RecipeFixer;
+import com.blakebr0.morebuckets.handler.ColorHandler;
 import com.blakebr0.morebuckets.init.ModItems;
 import com.blakebr0.morebuckets.init.ModRecipeSerializers;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -29,6 +32,10 @@ public class MoreBuckets {
 		bus.register(new ModRecipeSerializers());
 
 		ModItems.REGISTRY.register(bus);
+
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+			bus.register(new ColorHandler());
+		});
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModConfigs.COMMON);
 	}
