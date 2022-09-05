@@ -30,6 +30,6 @@ license="MIT"
     [[dependencies.morebuckets]]
         modId="cucumber"
         mandatory=true
-        versionRange="[6.0.0,)"
+        versionRange="[6.0.1,)"
         ordering="NONE"
         side="BOTH"
