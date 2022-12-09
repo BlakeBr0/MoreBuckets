@@ -1,6 +1,7 @@
 package com.blakebr0.morebuckets.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.ModList;
 
 public class ModConfigs {
     public static final ForgeConfigSpec COMMON;
@@ -17,5 +18,13 @@ public class ModConfigs {
                 .define("enableRecipeFixer", true);
 
         COMMON = common.build();
+    }
+
+    public static boolean isMysticalAgricultureInstalled() {
+        return ModList.get().isLoaded("mysticalagriculture");
+    }
+
+    public static boolean isMysticalAgradditionsInstalled() {
+        return ModList.get().isLoaded("mysticalagradditions");
     }
 }
