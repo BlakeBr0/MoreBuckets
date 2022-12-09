@@ -1,4 +1,4 @@
-package com.blakebr0.morebuckets.handler;
+package com.blakebr0.morebuckets.client.handler;
 
 import com.blakebr0.morebuckets.item.MoreBucketItem;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
