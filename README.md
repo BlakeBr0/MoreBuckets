@@ -8,6 +8,7 @@ The official release builds can be downloaded from the following websites.
 
 - [Blake's Mods](https://blakesmods.com/more-buckets/download)
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/more-buckets)
+- [Modrinth](https://modrinth.com/mod/more-buckets)
 
 ## Development
 
