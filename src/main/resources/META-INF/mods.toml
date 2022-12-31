@@ -18,7 +18,7 @@ license="MIT"
     [[dependencies.morebuckets]]
         modId="forge"
         mandatory=true
-        versionRange="[42.0.0,)"
+        versionRange="[44.0.0,)"
         ordering="NONE"
         side="BOTH"
     [[dependencies.morebuckets]]
@@ -30,6 +30,6 @@ license="MIT"
     [[dependencies.morebuckets]]
         modId="cucumber"
         mandatory=true
-        versionRange="[6.0.1,)"
+        versionRange="[6.1.0,)"
         ordering="NONE"
         side="BOTH"
