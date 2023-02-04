@@ -1,4 +1,22 @@
-# More Buckets [![](http://cf.way2muchnoise.eu/full_298760_downloads.svg)](https://minecraft.curseforge.com/projects/more-buckets) 
+# More Buckets
+
+<p align="left">
+    <a href="https://blakesmods.com/more-buckets" alt="Downloads">
+        <img src="https://img.shields.io/endpoint?url=https://api.blakesmods.com/v2/badges/morebuckets/downloads&style=for-the-badge" />
+    </a>
+    <a href="https://blakesmods.com/more-buckets" alt="Latest Version">
+        <img src="https://img.shields.io/endpoint?url=https://api.blakesmods.com/v2/badges/morebuckets/version&style=for-the-badge" />
+    </a>
+    <a href="https://blakesmods.com/more-buckets" alt="Minecraft Version">
+        <img src="https://img.shields.io/endpoint?url=https://api.blakesmods.com/v2/badges/morebuckets/mc_version&style=for-the-badge" />
+    </a>
+    <a href="https://blakesmods.com/docs/morebuckets" alt="Docs">
+        <img src="https://img.shields.io/static/v1?label=docs&message=view&color=brightgreen&style=for-the-badge" />
+    </a>
+    <a href="https://blakesmods.com/wiki/morebuckets" alt="Wiki">
+        <img src="https://img.shields.io/static/v1?label=wiki&message=view&color=brightgreen&style=for-the-badge" />
+    </a>
+</p>
 
 Adds some more buckets to Minecraft.
 
