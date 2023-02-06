@@ -7,7 +7,8 @@ import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.iface.IEnableable;
 import com.blakebr0.cucumber.iface.IFluidHolder;
 import com.blakebr0.cucumber.item.BaseItem;
-import com.blakebr0.morebuckets.crafting.RecipeFixer;
+import com.blakebr0.cucumber.util.Formatting;
+import com.blakebr0.morebuckets.bucket.Bucket;
 import com.blakebr0.morebuckets.lib.ModTooltips;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockSource;
@@ -35,37 +36,21 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.ModList;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
 public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableable {
     public static final List<MoreBucketItem> BUCKETS = new ArrayList<>();
 
-    private final int capacity;
-    private final String[] requiredMods;
+    private final Bucket bucket;
 
-    public MoreBucketItem(int capacity, Function<Properties, Properties> properties) {
-        this(capacity, true, properties);
-    }
-
-    public MoreBucketItem(int capacity, Function<Properties, Properties> properties, String... requiredMods) {
-        this(capacity, true, properties, requiredMods);
-    }
-
-    public MoreBucketItem(int capacity, boolean recipeReplacement, Function<Properties, Properties> properties, String... requiredMods) {
+    public MoreBucketItem(Bucket bucket, Function<Properties, Properties> properties) {
         super(properties.compose(p -> p.stacksTo(1)));
-        this.capacity = capacity;
-        this.requiredMods = requiredMods;
+        this.bucket = bucket;
 
         DispenserBlock.registerBehavior(this, new DispenserBehavior());
-
-        if (recipeReplacement && this.isEnabled()) {
-            RecipeFixer.VALID_BUCKETS.add(this);
-        }
 
         BUCKETS.add(this);
     }
@@ -112,7 +97,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
     public int getBurnTime(ItemStack stack, RecipeType<?> type) {
         var fluid = this.getFluid(stack);
         if (fluid != null && fluid.isFluidEqual(new FluidStack(Fluids.LAVA, 1000))) {
-            if (FluidHelper.getFluidAmount(stack) >= 1000) {
+            if (FluidHelper.getFluidAmount(stack) >= FluidType.BUCKET_VOLUME) {
                 return 20000;
             }
         }
@@ -122,8 +107,8 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 
     @Override
     public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
-        int capacity = this.getCapacity(stack) / 1000;
-        int buckets = FluidHelper.getFluidAmount(stack) / 1000;
+        var capacity = Formatting.number(this.bucket.getBuckets());
+        int buckets = FluidHelper.getFluidAmount(stack) / FluidType.BUCKET_VOLUME;
         var fluid = FluidHelper.getFluidFromStack(stack);
 
         if (fluid.isEmpty()) {
@@ -172,7 +157,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 
     @Override
     public int getCapacity(ItemStack stack) {
-        return this.capacity;
+        return this.bucket.getCapacity();
     }
 
     @Override
@@ -251,7 +236,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder, IEnableabl
 
     @Override
     public boolean isEnabled() {
-        return this.requiredMods.length == 0 || Arrays.stream(this.requiredMods).anyMatch(ModList.get()::isLoaded);
+        return this.bucket.isEnabled();
     }
 
     public int getSpaceLeft(ItemStack stack) {

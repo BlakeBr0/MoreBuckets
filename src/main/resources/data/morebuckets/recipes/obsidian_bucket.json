@@ -1,5 +1,11 @@
 {
   "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "morebuckets:bucket_enabled",
+      "bucket": "morebuckets:obsidian"
+    }
+  ],
   "pattern": [
     "M M",
     " M "

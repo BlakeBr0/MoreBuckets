@@ -2,8 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "conditions": [
     {
-      "type": "forge:mod_loaded",
-      "modid": "mysticalagriculture"
+      "type": "morebuckets:bucket_enabled",
+      "bucket": "morebuckets:supremium"
     }
   ],
   "pattern": [
