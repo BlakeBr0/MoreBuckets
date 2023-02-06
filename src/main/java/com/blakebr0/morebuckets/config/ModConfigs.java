@@ -1,5 +1,6 @@
 package com.blakebr0.morebuckets.config;
 
+import com.blakebr0.morebuckets.lib.ModBuckets;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 
@@ -16,6 +17,14 @@ public class ModConfigs {
         ENABLE_RECIPE_FIXER = common
                 .comment("Should the recipes with buckets be automatically updated to work with More Buckets buckets?")
                 .define("enableRecipeFixer", true);
+        common.pop();
+
+        common.comment("Individual options for each bucket.").push("Buckets");
+
+        for (var bucket : ModBuckets.ALL.values())
+            bucket.initConfigValues(common);
+
+        common.pop();
 
         COMMON = common.build();
     }

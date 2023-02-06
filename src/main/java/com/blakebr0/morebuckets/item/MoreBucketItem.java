@@ -6,7 +6,8 @@ import com.blakebr0.cucumber.helper.NBTHelper;
 import com.blakebr0.cucumber.helper.StackHelper;
 import com.blakebr0.cucumber.iface.IFluidHolder;
 import com.blakebr0.cucumber.item.BaseItem;
-import com.blakebr0.morebuckets.crafting.RecipeFixer;
+import com.blakebr0.cucumber.util.Formatting;
+import com.blakebr0.morebuckets.bucket.Bucket;
 import com.blakebr0.morebuckets.lib.ModTooltips;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockSource;
@@ -41,21 +42,12 @@ import java.util.List;
 public class MoreBucketItem extends BaseItem implements IFluidHolder {
     public static final List<MoreBucketItem> BUCKETS = new ArrayList<>();
 
-    private final int capacity;
+    private final Bucket bucket;
 
-    public MoreBucketItem(int capacity) {
-        this(capacity, true);
-    }
-
-    public MoreBucketItem(int capacity, boolean recipeReplacement) {
-        super(p -> p.stacksTo(1));
-        this.capacity = capacity;
+    public MoreBucketItem(Bucket bucket) {
+        this.bucket = bucket;
 
         DispenserBlock.registerBehavior(this, new DispenserBehavior());
-
-        if (recipeReplacement) {
-            RecipeFixer.VALID_BUCKETS.add(this);
-        }
 
         BUCKETS.add(this);
     }
@@ -102,7 +94,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder {
     public int getBurnTime(ItemStack stack, RecipeType<?> type) {
         var fluid = this.getFluid(stack);
         if (fluid != null && fluid.isFluidEqual(new FluidStack(Fluids.LAVA, 1000))) {
-            if (FluidHelper.getFluidAmount(stack) >= 1000) {
+            if (FluidHelper.getFluidAmount(stack) >= FluidType.BUCKET_VOLUME) {
                 return 20000;
             }
         }
@@ -112,8 +104,8 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder {
 
     @Override
     public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
-        int capacity = this.getCapacity(stack) / 1000;
-        int buckets = FluidHelper.getFluidAmount(stack) / 1000;
+        var capacity = Formatting.number(this.bucket.getBuckets());
+        int buckets = FluidHelper.getFluidAmount(stack) / FluidType.BUCKET_VOLUME;
         var fluid = FluidHelper.getFluidFromStack(stack);
 
         if (fluid.isEmpty()) {
@@ -162,7 +154,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder {
 
     @Override
     public int getCapacity(ItemStack stack) {
-        return this.capacity;
+        return this.bucket.getCapacity();
     }
 
     @Override
@@ -241,6 +233,10 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder {
 
     public int getSpaceLeft(ItemStack stack) {
         return this.getCapacity(stack) - FluidHelper.getFluidAmount(stack);
+    }
+
+    public boolean isEnabled() {
+        return this.bucket.isEnabled();
     }
 
     private InteractionResultHolder<ItemStack> tryPlaceFluid(ItemStack stack, Level level, Player player, InteractionHand hand) {

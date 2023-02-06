@@ -29,6 +29,14 @@ public class RecipeFixer implements ResourceManagerReloadListener {
         if (!ModConfigs.ENABLE_RECIPE_FIXER.get())
             return;
 
+        VALID_BUCKETS.clear();
+
+        for (var bucket : MoreBucketItem.BUCKETS) {
+            if (bucket.isEnabled()) {
+                VALID_BUCKETS.add(bucket);
+            }
+        }
+
         var recipes = RecipeHelper.getRecipeManager().getRecipes();
 
         for (var recipe : recipes) {
