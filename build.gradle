@@ -42,7 +42,7 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
 
-            ideaModule "${rootProject.name}.${project.name}.main"
+            ideaModule rootProject.name != project.name ? "${rootProject.name}.${project.name}.main" : "${project.name}.main"
 
             mods {
                 morebuckets {
@@ -63,7 +63,7 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
 
-            ideaModule "${rootProject.name}.${project.name}.main"
+            ideaModule rootProject.name != project.name ? "${rootProject.name}.${project.name}.main" : "${project.name}.main"
 
             mods {
                 morebuckets {
