@@ -16,7 +16,7 @@ public final class ModCreativeModeTabs {
     @SubscribeEvent
     public void onRegisterCreativeModeTabs(CreativeModeTabEvent.Register event) {
         event.registerCreativeModeTab(new ResourceLocation(MoreBuckets.MOD_ID, "creative_mode_tab"), (builder) -> {
-            var displayItems = FeatureFlagDisplayItemGenerator.create((flagSet, output, hasPermission) -> {
+            var displayItems = FeatureFlagDisplayItemGenerator.create((parameters, output) -> {
                 accept(output, ModItems.COPPER_BUCKET, ModBuckets.COPPER);
                 accept(output, ModItems.QUARTZ_BUCKET, ModBuckets.QUARTZ);
                 accept(output, ModItems.OBSIDIAN_BUCKET, ModBuckets.OBSIDIAN);
