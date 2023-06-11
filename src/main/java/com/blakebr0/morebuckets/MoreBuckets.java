@@ -28,10 +28,10 @@ public class MoreBuckets {
 		var bus = FMLJavaModLoadingContext.get().getModEventBus();
 
 		bus.register(this);
-		bus.register(new ModCreativeModeTabs());
 		bus.register(new ModRecipeSerializers());
 
 		ModItems.REGISTRY.register(bus);
+		ModCreativeModeTabs.REGISTRY.register(bus);
 
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			bus.register(new ColorHandler());
