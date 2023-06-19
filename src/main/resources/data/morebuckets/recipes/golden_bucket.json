@@ -3,7 +3,7 @@
   "conditions": [
     {
       "type": "morebuckets:bucket_enabled",
-      "bucket": "morebuckets:golden"
+      "bucket": "morebuckets:gold"
     }
   ],
   "pattern": [
