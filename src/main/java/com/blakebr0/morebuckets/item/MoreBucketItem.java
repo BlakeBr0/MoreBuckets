@@ -45,6 +45,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder {
     private final Bucket bucket;
 
     public MoreBucketItem(Bucket bucket) {
+        super(p -> p.stacksTo(1));
         this.bucket = bucket;
 
         DispenserBlock.registerBehavior(this, new DispenserBehavior());
@@ -194,7 +195,6 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder {
 
         if (amount < filled) {
             bucketFluid.grow(amount);
-            ;
             filled = amount;
         } else {
             bucketFluid.setAmount(capacity);
