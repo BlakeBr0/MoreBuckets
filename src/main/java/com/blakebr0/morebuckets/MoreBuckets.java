@@ -7,6 +7,7 @@ import com.blakebr0.morebuckets.init.ModCreativeModeTabs;
 import com.blakebr0.morebuckets.init.ModItems;
 import com.blakebr0.morebuckets.init.ModRecipeSerializers;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -36,6 +37,8 @@ public class MoreBuckets {
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
 			bus.register(new ColorHandler());
 		});
+
+		ForgeMod.enableMilkFluid();
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModConfigs.COMMON);
 	}

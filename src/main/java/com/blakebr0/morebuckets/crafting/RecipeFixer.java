@@ -7,6 +7,7 @@ import com.blakebr0.morebuckets.item.MoreBucketItem;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.MilkBucketItem;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.minecraftforge.common.crafting.DifferenceIngredient;
@@ -52,7 +53,7 @@ public class RecipeFixer implements ResourceManagerReloadListener {
                     if (value instanceof Ingredient.ItemValue || value instanceof MultiItemValue) {
                         for (var stack : value.getItems()) {
                             var item = stack.getItem();
-                            if (item instanceof BucketItem || item instanceof IFluidHandler) {
+                            if (item instanceof BucketItem || item instanceof MilkBucketItem || item instanceof IFluidHandler) {
                                 ingredients.set(i, new FluidIngredient(ingredient));
                                 break;
                             }

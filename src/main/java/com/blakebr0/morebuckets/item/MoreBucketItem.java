@@ -15,13 +15,20 @@ import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -29,6 +36,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
@@ -92,6 +100,16 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder {
     }
 
     @Override
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return isMilkBucket(stack) ? UseAnim.DRINK : UseAnim.NONE;
+    }
+
+    @Override
+    public int getUseDuration(ItemStack stack) {
+        return isMilkBucket(stack) ? 32 : 0;
+    }
+
+    @Override
     public int getBurnTime(ItemStack stack, RecipeType<?> type) {
         var fluid = this.getFluid(stack);
         if (fluid != null && fluid.isFluidEqual(new FluidStack(Fluids.LAVA, 1000))) {
@@ -119,9 +137,13 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         var stack = player.getItemInHand(hand);
-        var fluid = this.getFluid(stack);
 
-        var pickup = this.tryPickupFluid(stack, level, player, hand);
+        if (isMilkBucket(stack)) {
+            return ItemUtils.startUsingInstantly(level, player, hand);
+        }
+
+        var fluid = this.getFluid(stack);
+        var pickup = this.tryPickupFluid(stack, level, player);
 
         if (pickup.getResult() == InteractionResult.SUCCESS) {
             return pickup;
@@ -134,19 +156,34 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder {
         }
     }
 
-    // TODO: milk
-//	@Override
-//	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
-//		if (target instanceof EntityCow) {
-//			EntityCow cow = (EntityCow) target;
-//			if (!player.capabilities.isCreativeMode && !cow.isChild()) {
-//				Fluid milk = FluidRegistry.getFluid("milk");
-//				return milk != null && this.fill(stack, new FluidStack(milk, 1000), true) > 0;
-//			}
-//		}
-//
-//		return false;
-//	}
+	@Override
+	public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
+		if (entity instanceof Cow cow && !cow.isBaby()) {
+            if (this.fill(stack, new FluidStack(ForgeMod.MILK.get(), FluidType.BUCKET_VOLUME), true) > 0) {
+                player.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
+                return InteractionResult.SUCCESS;
+            }
+		}
+
+		return InteractionResult.PASS;
+	}
+
+    @Override // copied from MilkBucketItem#finishUsingItem
+    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
+        // change: pass in vanilla milk bucket to trick MobEffectInstance#isCurativeItem
+        if (!level.isClientSide) entity.curePotionEffects(new ItemStack(Items.MILK_BUCKET));
+        if (entity instanceof ServerPlayer player) {
+            CriteriaTriggers.CONSUME_ITEM.trigger(player, stack);
+            player.awardStat(Stats.ITEM_USED.get(this));
+        }
+
+        if (entity instanceof Player player && !player.getAbilities().instabuild) {
+            // change: instead of shrinking the stack we drain the fluid
+            this.drain(stack, FluidType.BUCKET_VOLUME, true);
+        }
+
+        return stack;
+    }
 
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag tag) {
@@ -266,7 +303,7 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder {
         return InteractionResultHolder.fail(stack);
     }
 
-    private InteractionResultHolder<ItemStack> tryPickupFluid(ItemStack stack, Level level, Player player, InteractionHand hand) {
+    private InteractionResultHolder<ItemStack> tryPickupFluid(ItemStack stack, Level level, Player player) {
         if (this.getSpaceLeft(stack) < FluidType.BUCKET_VOLUME)
             return InteractionResultHolder.pass(stack);
 
@@ -291,6 +328,10 @@ public class MoreBucketItem extends BaseItem implements IFluidHolder {
         }
 
         return InteractionResultHolder.fail(stack);
+    }
+
+    private static boolean isMilkBucket(ItemStack stack) {
+        return FluidHelper.getFluidFromStack(stack).getFluid() == ForgeMod.MILK.get();
     }
 
     private static class DispenserBehavior extends OptionalDispenseItemBehavior {
