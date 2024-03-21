@@ -1,0 +1,26 @@
+{
+  "itemGroup.morebuckets": "More Buckets",
+
+  "item.morebuckets.aluminum_bucket": "アルミニウムのバケツ",
+  "item.morebuckets.copper_bucket": "銅のバケツ",
+  "item.morebuckets.tin_bucket": "錫のバケツ",
+  "item.morebuckets.rubber_bucket": "ゴムのバケツ",
+  "item.morebuckets.silver_bucket": "銀のバケツ",
+  "item.morebuckets.quartz_bucket": "クォーツのバケツ",
+  "item.morebuckets.obsidian_bucket": "黒曜石のバケツ",
+  "item.morebuckets.bronze_bucket": "青銅のバケツ",
+  "item.morebuckets.golden_bucket": "金のバケツ",
+  "item.morebuckets.steel_bucket": "鋼鉄のバケツ",
+  "item.morebuckets.emerald_bucket": "エメラルドのバケツ",
+  "item.morebuckets.diamond_bucket": "ダイヤモンドのバケツ",
+
+  "item.morebuckets.inferium_bucket": "インフェリウムのバケツ",
+  "item.morebuckets.prudentium_bucket": "プルデンティウムのバケツ",
+  "item.morebuckets.tertium_bucket": "テルティウムのバケツ",
+  "item.morebuckets.imperium_bucket": "インペリウムのバケツ",
+  "item.morebuckets.supremium_bucket": "スプレミウムのバケツ",
+  "item.morebuckets.insanium_bucket": "インサニウムのバケツ",
+
+  "tooltip.morebuckets.empty": "空",
+  "tooltip.morebuckets.buckets": "%s／%s - %s"
+}
