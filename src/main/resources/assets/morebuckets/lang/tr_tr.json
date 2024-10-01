@@ -1,0 +1,26 @@
+{
+  "itemGroup.morebuckets": "More Buckets",
+
+  "item.morebuckets.aluminum_bucket": "Alüminyum Kova",
+  "item.morebuckets.copper_bucket": "Bakır Kova",
+  "item.morebuckets.tin_bucket": "Kalay Kova",
+  "item.morebuckets.rubber_bucket": "Kauçuk Kova",
+  "item.morebuckets.silver_bucket": "Gümüş Kova",
+  "item.morebuckets.quartz_bucket": "Kuvars Kova",
+  "item.morebuckets.obsidian_bucket": "Obsidiyen Kova",
+  "item.morebuckets.bronze_bucket": "Bronz Kova",
+  "item.morebuckets.golden_bucket": "Altın Kova",
+  "item.morebuckets.steel_bucket": "Çelik Kova",
+  "item.morebuckets.emerald_bucket": "Zümrüt Kova",
+  "item.morebuckets.diamond_bucket": "Elmas Kova",
+
+  "item.morebuckets.inferium_bucket": "Inferium Kova",
+  "item.morebuckets.prudentium_bucket": "Prudentium Kova",
+  "item.morebuckets.tertium_bucket": "Tertium Kova",
+  "item.morebuckets.imperium_bucket": "Imperium Kova",
+  "item.morebuckets.supremium_bucket": "Supremium Kova",
+  "item.morebuckets.insanium_bucket": "Insanium Kova",
+
+  "tooltip.morebuckets.empty": "Boş",
+  "tooltip.morebuckets.buckets": "%s/%s - %s"
+}
