@@ -1,6 +1,7 @@
 package com.blakebr0.morebuckets.crafting;
 
 import com.blakebr0.cucumber.helper.RecipeHelper;
+import com.blakebr0.morebuckets.MoreBuckets;
 import com.blakebr0.morebuckets.config.ModConfigs;
 import com.blakebr0.morebuckets.crafting.ingredient.FluidIngredient;
 import com.blakebr0.morebuckets.item.MoreBucketItem;
@@ -52,7 +53,12 @@ public class RecipeFixer implements ResourceManagerReloadListener {
                         for (var stack : value.getItems()) {
                             var item = stack.getItem();
                             if (item instanceof BucketItem || item instanceof MilkBucketItem || item instanceof IFluidHandler) {
-                                ingredients.set(i, new FluidIngredient(ingredient));
+                                try {
+                                    ingredients.set(i, new FluidIngredient(ingredient));
+                                } catch (Exception e) {
+                                    MoreBuckets.LOGGER.warn("Failed to modify ingredients for recipe {}, skipping", recipe.getId());
+                                }
+
                                 break;
                             }
                         }
