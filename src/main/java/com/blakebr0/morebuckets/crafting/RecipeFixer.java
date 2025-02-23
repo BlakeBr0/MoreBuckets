@@ -10,6 +10,7 @@ import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.MilkBucketItem;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraftforge.common.crafting.CompoundIngredient;
 import net.minecraftforge.common.crafting.MultiItemValue;
 import net.minecraftforge.common.crafting.PartialNBTIngredient;
@@ -55,6 +56,10 @@ public class RecipeFixer implements ResourceManagerReloadListener {
                             if (item instanceof BucketItem || item instanceof MilkBucketItem || item instanceof IFluidHandler) {
                                 try {
                                     ingredients.set(i, new FluidIngredient(ingredient));
+
+                                    if (recipe.getClass().equals(ShapelessRecipe.class)) {
+                                        setNotSimple((ShapelessRecipe) recipe);
+                                    }
                                 } catch (Exception e) {
                                     MoreBuckets.LOGGER.warn("Failed to modify ingredients for recipe {}, skipping", recipe.getId());
                                 }
@@ -77,5 +82,12 @@ public class RecipeFixer implements ResourceManagerReloadListener {
         return clazz.equals(CompoundIngredient.class)
                 || clazz.equals(StrictNBTIngredient.class)
                 || clazz.equals(PartialNBTIngredient.class);
+    }
+
+    private static void setNotSimple(ShapelessRecipe recipe) throws NoSuchFieldException, IllegalAccessException {
+        var isSimple = recipe.getClass().getDeclaredField("isSimple");
+
+        isSimple.setAccessible(true);
+        isSimple.set(recipe, false);
     }
 }
