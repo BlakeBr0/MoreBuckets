@@ -88,7 +88,7 @@ public class FluidBucketIngredient implements ICustomIngredient {
     }
 
     public static Ingredient of(Ingredient parent) {
-        return Ingredient.of(new FluidBucketIngredient(parent).getItems());
+        return new Ingredient(new FluidBucketIngredient(parent));
     }
 
     private static FluidStack findFluid(Ingredient ingredient) {
