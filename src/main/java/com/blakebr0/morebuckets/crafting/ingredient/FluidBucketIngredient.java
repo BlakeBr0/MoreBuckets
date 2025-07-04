@@ -67,11 +67,11 @@ public class FluidBucketIngredient implements ICustomIngredient {
         var fluid = findFluid(this.parent);
 
         if (fluid != null) {
-            ItemStack[] parentStacks = this.parent.getItems();
-            ItemStack[] bucketStacks = RecipeFixer.VALID_BUCKETS.stream()
+            var parentStacks = this.parent.getItems();
+            var bucketStacks = RecipeFixer.VALID_BUCKETS.stream()
                     .map(e -> FluidHelper.getFilledBucket(fluid, e, e.getCapacity()))
                     .toArray(ItemStack[]::new);
-            ItemStack[] matchingStacks = new ItemStack[parentStacks.length + bucketStacks.length];
+            var matchingStacks = new ItemStack[parentStacks.length + bucketStacks.length];
 
             for (int i = 0; i < parentStacks.length; i++) {
                 matchingStacks[i] = parentStacks[i];
@@ -83,7 +83,7 @@ public class FluidBucketIngredient implements ICustomIngredient {
 
             this.stacks = matchingStacks;
         } else {
-            this.stacks = new ItemStack[0];
+            this.stacks = this.parent.getItems();
         }
     }
 
