@@ -1,0 +1,26 @@
+{
+  "itemGroup.morebuckets": "More Buckets",
+
+  "item.morebuckets.aluminum_bucket": "Balde de Alumínio",
+  "item.morebuckets.copper_bucket": "Balde de Cobre",
+  "item.morebuckets.tin_bucket": "Balde de Estanho",
+  "item.morebuckets.rubber_bucket": "Balde de Borracha",
+  "item.morebuckets.silver_bucket": "Balde de Prata",
+  "item.morebuckets.quartz_bucket": "Balde de Quartzo",
+  "item.morebuckets.obsidian_bucket": "Balde de Obsidiana",
+  "item.morebuckets.bronze_bucket": "Balde de Bronze",
+  "item.morebuckets.golden_bucket": "Balde de Ouro",
+  "item.morebuckets.steel_bucket": "Balde de Aço",
+  "item.morebuckets.emerald_bucket": "Balde de Esmeralda",
+  "item.morebuckets.diamond_bucket": "Balde de Diamante",
+
+  "item.morebuckets.inferium_bucket": "Balde de Inferium",
+  "item.morebuckets.prudentium_bucket": "Balde de Prudentium",
+  "item.morebuckets.tertium_bucket": "Balde de Tertium",
+  "item.morebuckets.imperium_bucket": "Balde de Imperium",
+  "item.morebuckets.supremium_bucket": "Balde de Supremium",
+  "item.morebuckets.insanium_bucket": "Balde de Insanium",
+
+  "tooltip.morebuckets.empty": "Vazio",
+  "tooltip.morebuckets.buckets": "%s/%s - %s"
+}
