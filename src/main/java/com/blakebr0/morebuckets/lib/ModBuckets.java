@@ -3,13 +3,13 @@ package com.blakebr0.morebuckets.lib;
 import com.blakebr0.morebuckets.MoreBuckets;
 import com.blakebr0.morebuckets.bucket.Bucket;
 import com.blakebr0.morebuckets.config.ModConfigs;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class ModBuckets {
-    public static final Map<ResourceLocation, Bucket> ALL = new LinkedHashMap<>();
+    public static final Map<Identifier, Bucket> ALL = new LinkedHashMap<>();
 
     public static final Bucket COPPER = new Bucket("Copper", 1);
     public static final Bucket QUARTZ = new Bucket("Quartz", 2);

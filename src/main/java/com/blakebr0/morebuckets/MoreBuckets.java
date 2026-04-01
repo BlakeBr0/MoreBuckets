@@ -1,6 +1,5 @@
 package com.blakebr0.morebuckets;
 
-import com.blakebr0.morebuckets.client.handler.ColorHandler;
 import com.blakebr0.morebuckets.config.ModConfigs;
 import com.blakebr0.morebuckets.crafting.RecipeFixer;
 import com.blakebr0.morebuckets.handler.RegisterCapabilityHandler;
@@ -9,15 +8,13 @@ import com.blakebr0.morebuckets.init.ModCreativeModeTabs;
 import com.blakebr0.morebuckets.init.ModDataComponentTypes;
 import com.blakebr0.morebuckets.init.ModIngredientTypes;
 import com.blakebr0.morebuckets.init.ModItems;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import org.slf4j.Logger;
@@ -39,10 +36,6 @@ public class MoreBuckets {
 		ModConditionSerializers.REGISTRY.register(bus);
 		ModIngredientTypes.REGISTRY.register(bus);
 
-		if (FMLEnvironment.dist == Dist.CLIENT) {
-			bus.register(new ColorHandler());
-		}
-
 		NeoForgeMod.enableMilkFluid();
 
 		mod.registerConfig(ModConfig.Type.COMMON, ModConfigs.COMMON);
@@ -53,7 +46,7 @@ public class MoreBuckets {
 		NeoForge.EVENT_BUS.register(new RecipeFixer());
 	}
 
-	public static ResourceLocation resource(String path) {
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+	public static Identifier resource(String path) {
+		return Identifier.fromNamespaceAndPath(MOD_ID, path);
 	}
 }

@@ -6,16 +6,19 @@ import com.blakebr0.morebuckets.init.ModIngredientTypes;
 import com.blakebr0.morebuckets.item.MoreBucketItem;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
+// TODO: fluid bucket ingredient
 public class FluidBucketIngredient implements ICustomIngredient {
     public static final MapCodec<FluidBucketIngredient> CODEC = RecordCodecBuilder.mapCodec(builder ->
             builder.group(
@@ -35,22 +38,18 @@ public class FluidBucketIngredient implements ICustomIngredient {
         if (stack == null) {
             return false;
         } else {
-            var fluid = FluidUtil.getFluidContained(stack);
-            if (fluid.isPresent() && stack.getItem() instanceof MoreBucketItem) {
-                return this.getItems().anyMatch(s -> FluidUtil.getFluidContained(s).map(f -> f.is(fluid.get().getFluid())).orElse(false));
-            }
+            var fluid = FluidUtil.getFirstStackContained(stack);
+//            if (!fluid.isEmpty() && stack.getItem() instanceof MoreBucketItem) {
+//                return this.getItems().anyMatch(s -> FluidUtil.getFirstStackContained(s).is(fluid.getFluid()));
+//            }
 
             return this.parent.test(stack);
         }
     }
 
     @Override
-    public Stream<ItemStack> getItems() {
-        if (this.stacks == null) {
-            this.initMatchingStacks();
-        }
-
-        return Stream.of(this.stacks);
+    public Stream<Holder<Item>> items() {
+        return Stream.empty();
     }
 
     @Override
@@ -64,27 +63,27 @@ public class FluidBucketIngredient implements ICustomIngredient {
     }
 
     private void initMatchingStacks() {
-        var fluid = findFluid(this.parent);
-
-        if (fluid != null) {
-            var parentStacks = this.parent.getItems();
-            var bucketStacks = RecipeFixer.VALID_BUCKETS.stream()
-                    .map(e -> FluidHelper.getFilledBucket(fluid, e, e.getCapacity()))
-                    .toArray(ItemStack[]::new);
-            var matchingStacks = new ItemStack[parentStacks.length + bucketStacks.length];
-
-            for (int i = 0; i < parentStacks.length; i++) {
-                matchingStacks[i] = parentStacks[i];
-            }
-
-            for (int j = parentStacks.length; j < matchingStacks.length; j++) {
-                matchingStacks[j] = bucketStacks[j - parentStacks.length];
-            }
-
-            this.stacks = matchingStacks;
-        } else {
-            this.stacks = this.parent.getItems();
-        }
+//        var fluid = findFluid(this.parent);
+//
+//        if (fluid != null) {
+//            var parentStacks = this.parent.getValues();
+//            var bucketStacks = RecipeFixer.VALID_BUCKETS.stream()
+//                    .map(e -> FluidHelper.getFilledBucket(fluid, e, e.getCapacity()))
+//                    .toArray(ItemStack[]::new);
+//            var matchingStacks = new ItemStack[parentStacks.size() + bucketStacks.length];
+//
+//            for (int i = 0; i < parentStacks.size(); i++) {
+//                matchingStacks[i] = parentStacks.get(i);
+//            }
+//
+//            for (int j = parentStacks.size(); j < matchingStacks.length; j++) {
+//                matchingStacks[j] = bucketStacks[j - parentStacks.size()];
+//            }
+//
+//            this.stacks = matchingStacks;
+//        } else {
+//            this.stacks = this.parent.getValues();
+//        }
     }
 
     public static Ingredient of(Ingredient parent) {
@@ -92,13 +91,10 @@ public class FluidBucketIngredient implements ICustomIngredient {
     }
 
     private static FluidStack findFluid(Ingredient ingredient) {
-        for (var stack : ingredient.getItems()) {
-            var fluid = FluidUtil.getFluidContained(stack);
-            if (fluid.isPresent()) {
-                return fluid.get();
-            }
-        }
+//        for (var value : ingredient.getValues()) {
+//            return FluidUtil.getFirstStackContained(value);
+//        }
 
-        return null;
+        return FluidStack.EMPTY;
     }
 }

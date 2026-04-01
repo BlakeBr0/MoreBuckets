@@ -18,7 +18,7 @@ public final class ModCreativeModeTabs {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> CREATIVE_TAB = REGISTRY.register("creative_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.morebuckets"))
             .icon(() -> new ItemStack(ModItems.DIAMOND_BUCKET.get()))
-            .displayItems(FeatureFlagDisplayItemGenerator.create((parameters, output) -> {
+            .displayItems(FeatureFlagDisplayItemGenerator.create((_, output) -> {
                 accept(output, ModItems.COPPER_BUCKET, ModBuckets.COPPER);
                 accept(output, ModItems.QUARTZ_BUCKET, ModBuckets.QUARTZ);
                 accept(output, ModItems.OBSIDIAN_BUCKET, ModBuckets.OBSIDIAN);

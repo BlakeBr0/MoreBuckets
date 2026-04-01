@@ -1,33 +1,27 @@
 package com.blakebr0.morebuckets.bucket;
 
 import com.blakebr0.cucumber.helper.FluidHelper;
-import com.blakebr0.morebuckets.init.ModDataComponentTypes;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.minecraft.core.component.DataComponentType;
+import net.neoforged.neoforge.fluids.SimpleFluidContent;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.ItemAccessFluidHandler;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-public class BucketFluidHandlerItemStack extends FluidHandlerItemStack {
-    public BucketFluidHandlerItemStack(ItemStack container, int capacity) {
-        super(ModDataComponentTypes.BUCKET_CONTENT, container, capacity);
+public class BucketFluidHandlerItemStack extends ItemAccessFluidHandler {
+    public BucketFluidHandlerItemStack(ItemAccess access, DataComponentType<SimpleFluidContent> component, int capacity) {
+        super(access, component, capacity);
     }
 
     @Override
-    public int fill(FluidStack resource, FluidAction doFill) {
-        var amount = FluidHelper.toBuckets(resource.getAmount());
-        if (amount != resource.getAmount()) {
-            resource = resource.copyWithAmount(amount);
-        }
-
-        return super.fill(resource, doFill);
+    public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
+        var buckets = FluidHelper.toBuckets(amount);
+        return super.insert(index, resource, buckets, transaction);
     }
 
     @Override
-    public FluidStack drain(int maxDrain, FluidAction action) {
-        var amount = FluidHelper.toBuckets(maxDrain);
-        if (amount != maxDrain) {
-            maxDrain = amount;
-        }
-
-        return super.drain(maxDrain, action);
+    public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
+        var buckets = FluidHelper.toBuckets(amount);
+        return super.extract(index, resource, buckets, transaction);
     }
 }
