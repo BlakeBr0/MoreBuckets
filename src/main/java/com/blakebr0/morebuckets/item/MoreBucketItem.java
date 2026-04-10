@@ -2,10 +2,11 @@ package com.blakebr0.morebuckets.item;
 
 import com.blakebr0.cucumber.helper.FluidHelper;
 import com.blakebr0.cucumber.item.BaseItem;
+import com.blakebr0.cucumber.lib.Tooltips;
 import com.blakebr0.cucumber.util.Formatting;
 import com.blakebr0.morebuckets.bucket.Bucket;
 import com.blakebr0.morebuckets.init.ModDataComponentTypes;
-import com.blakebr0.morebuckets.lib.ModTooltips;
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
@@ -132,14 +133,14 @@ public class MoreBucketItem extends BaseItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
-        var capacity = Formatting.number(this.bucket.getBuckets());
+        var capacity = this.bucket.getBuckets();
         int buckets = FluidHelper.getFluidAmount(stack) / FluidType.BUCKET_VOLUME;
         var fluid = FluidHelper.getFluidFromStack(stack);
 
         if (fluid.isEmpty()) {
-            builder.accept(ModTooltips.BUCKETS.args(buckets, capacity, ModTooltips.EMPTY.toComponent()).toComponent());
+            builder.accept(Component.literal("%s/%s - %s".formatted(buckets, capacity, Tooltips.EMPTY.toString())).withStyle(ChatFormatting.GRAY));
         } else {
-            builder.accept(ModTooltips.BUCKETS.args(buckets, capacity, fluid.getHoverName()).toComponent());
+            builder.accept(Component.literal("%s/%s - %s".formatted(buckets, capacity, fluid.getHoverName())).withStyle(ChatFormatting.GRAY));
         }
     }
 

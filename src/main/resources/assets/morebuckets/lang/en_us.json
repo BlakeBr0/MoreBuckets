@@ -19,8 +19,5 @@
   "item.morebuckets.tertium_bucket": "Tertium Bucket",
   "item.morebuckets.imperium_bucket": "Imperium Bucket",
   "item.morebuckets.supremium_bucket": "Supremium Bucket",
-  "item.morebuckets.insanium_bucket": "Insanium Bucket",
-
-  "tooltip.morebuckets.empty": "Empty",
-  "tooltip.morebuckets.buckets": "%s/%s - %s"
+  "item.morebuckets.insanium_bucket": "Insanium Bucket"
 }

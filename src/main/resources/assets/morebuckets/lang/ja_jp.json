@@ -19,8 +19,5 @@
   "item.morebuckets.tertium_bucket": "テルティウムのバケツ",
   "item.morebuckets.imperium_bucket": "インペリウムのバケツ",
   "item.morebuckets.supremium_bucket": "スプレミウムのバケツ",
-  "item.morebuckets.insanium_bucket": "インサニウムのバケツ",
-
-  "tooltip.morebuckets.empty": "空",
-  "tooltip.morebuckets.buckets": "%s／%s - %s"
+  "item.morebuckets.insanium_bucket": "インサニウムのバケツ"
 }
