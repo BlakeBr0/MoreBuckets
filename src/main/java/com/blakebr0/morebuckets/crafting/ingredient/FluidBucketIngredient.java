@@ -1,9 +1,6 @@
 package com.blakebr0.morebuckets.crafting.ingredient;
 
-import com.blakebr0.cucumber.helper.FluidHelper;
-import com.blakebr0.morebuckets.crafting.RecipeFixer;
 import com.blakebr0.morebuckets.init.ModIngredientTypes;
-import com.blakebr0.morebuckets.item.MoreBucketItem;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;

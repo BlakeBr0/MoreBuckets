@@ -8,7 +8,7 @@ import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-public class ModItems {
+public final class ModItems {
 	public static final DeferredRegister<Item> REGISTRY = DeferredRegister.create(Registries.ITEM, MoreBuckets.MOD_ID);
 
 	public static final DeferredHolder<Item, Item> COPPER_BUCKET = REGISTRY.register("copper_bucket", id -> new MoreBucketItem(id, ModBuckets.COPPER));

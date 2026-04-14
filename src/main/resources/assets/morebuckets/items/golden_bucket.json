@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "neoforge:fluid_container",
+    "textures": {
+      "particle": "morebuckets:item/golden_bucket",
+      "base": "morebuckets:item/golden_bucket",
+      "fluid": "neoforge:item/mask/bucket_fluid"
+    },
+    "fluid": "minecraft:empty"
+  }
+}

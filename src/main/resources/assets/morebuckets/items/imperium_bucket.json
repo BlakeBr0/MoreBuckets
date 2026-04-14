@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "neoforge:fluid_container",
+    "textures": {
+      "particle": "morebuckets:item/imperium_bucket",
+      "base": "morebuckets:item/imperium_bucket",
+      "fluid": "neoforge:item/mask/bucket_fluid"
+    },
+    "fluid": "minecraft:empty"
+  }
+}

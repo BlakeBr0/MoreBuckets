@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "neoforge:fluid_container",
+    "textures": {
+      "particle": "morebuckets:item/obsidian_bucket",
+      "base": "morebuckets:item/obsidian_bucket",
+      "fluid": "neoforge:item/mask/bucket_fluid"
+    },
+    "fluid": "minecraft:empty"
+  }
+}
