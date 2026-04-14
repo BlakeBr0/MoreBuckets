@@ -1,9 +1,7 @@
 package com.blakebr0.morebuckets.item;
 
-import com.blakebr0.cucumber.helper.FluidHelper;
 import com.blakebr0.cucumber.item.BaseItem;
 import com.blakebr0.cucumber.lib.Tooltips;
-import com.blakebr0.cucumber.util.Formatting;
 import com.blakebr0.morebuckets.bucket.Bucket;
 import com.blakebr0.morebuckets.init.ModDataComponentTypes;
 import net.minecraft.ChatFormatting;
@@ -89,7 +87,7 @@ public class MoreBucketItem extends BaseItem {
     @Override
     public int getBarWidth(ItemStack stack) {
         int capacity = this.bucket.getCapacity();
-        int stored = capacity - FluidHelper.getFluidAmount(stack);
+        int stored = capacity - FluidUtil.getFirstStackContained(stack).getAmount();
 
         return Math.round(13.0F - stored * 13.0F / (float) capacity);
     }
@@ -97,7 +95,7 @@ public class MoreBucketItem extends BaseItem {
     @Override
     public int getBarColor(ItemStack stack) {
         int capacity = this.bucket.getCapacity();
-        int stored = FluidHelper.getFluidAmount(stack);
+        int stored = FluidUtil.getFirstStackContained(stack).getAmount();
 
         float f = Math.max(0.0F, (float) stored / (float) capacity);
 
@@ -121,9 +119,9 @@ public class MoreBucketItem extends BaseItem {
 
     @Override
     public int getBurnTime(ItemStack stack, @Nullable RecipeType<?> type, FuelValues fuelValues) {
-        var fluid = FluidHelper.getFluidFromStack(stack);
+        var fluid = FluidUtil.getFirstStackContained(stack);
         if (fluid.is(Fluids.LAVA)) {
-            if (FluidHelper.getFluidAmount(stack) >= FluidType.BUCKET_VOLUME) {
+            if (fluid.getAmount() >= FluidType.BUCKET_VOLUME) {
                 return 20000;
             }
         }
@@ -134,13 +132,13 @@ public class MoreBucketItem extends BaseItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
         var capacity = this.bucket.getBuckets();
-        int buckets = FluidHelper.getFluidAmount(stack) / FluidType.BUCKET_VOLUME;
-        var fluid = FluidHelper.getFluidFromStack(stack);
+        var fluid = FluidUtil.getFirstStackContained(stack);
+        var buckets = fluid.getAmount() / FluidType.BUCKET_VOLUME;
 
         if (fluid.isEmpty()) {
             builder.accept(Component.literal("%s/%s - %s".formatted(buckets, capacity, Tooltips.EMPTY.toString())).withStyle(ChatFormatting.GRAY));
         } else {
-            builder.accept(Component.literal("%s/%s - %s".formatted(buckets, capacity, fluid.getHoverName())).withStyle(ChatFormatting.GRAY));
+            builder.accept(Component.literal("%s/%s - %s".formatted(buckets, capacity, fluid.getHoverName().getString())).withStyle(ChatFormatting.GRAY));
         }
     }
 
@@ -161,8 +159,8 @@ public class MoreBucketItem extends BaseItem {
         if (pickup == InteractionResult.SUCCESS) {
             return pickup;
         } else {
-            var fluid = FluidHelper.getFluidFromStack(stack);
-            if (fluid != null && fluid.getAmount() >= FluidType.BUCKET_VOLUME) {
+            var fluid = FluidUtil.getFirstStackContained(stack);
+            if (!fluid.isEmpty() && fluid.getAmount() >= FluidType.BUCKET_VOLUME) {
                 return this.tryPlaceFluid(stack, level, player, hand);
             } else {
                 return InteractionResult.FAIL;
@@ -219,11 +217,11 @@ public class MoreBucketItem extends BaseItem {
     }
 
     public int getSpaceLeft(ItemStack stack) {
-        return this.bucket.getCapacity() - FluidHelper.getFluidAmount(stack);
+        return this.bucket.getCapacity() - FluidUtil.getFirstStackContained(stack).getAmount();
     }
 
     private InteractionResult tryPlaceFluid(ItemStack stack, Level level, Player player, InteractionHand hand) {
-        if (FluidHelper.getFluidAmount(stack) < FluidType.BUCKET_VOLUME)
+        if (FluidUtil.getFirstStackContained(stack).getAmount() < FluidType.BUCKET_VOLUME)
             return InteractionResult.PASS;
 
         var trace = getPlayerPOVHitResult(level, player, ClipContext.Fluid.NONE);
@@ -279,7 +277,7 @@ public class MoreBucketItem extends BaseItem {
     }
 
     private static boolean isMilkBucket(ItemStack stack) {
-        return FluidHelper.getFluidFromStack(stack).getFluid() == NeoForgeMod.MILK.get();
+        return FluidUtil.getFirstStackContained(stack).getFluid() == NeoForgeMod.MILK.get();
     }
 
     private static class DispenserBehavior extends OptionalDispenseItemBehavior {
