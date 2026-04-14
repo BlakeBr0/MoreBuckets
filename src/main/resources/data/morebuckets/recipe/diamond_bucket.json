@@ -11,9 +11,7 @@
     " M "
   ],
   "key": {
-    "M": {
-      "tag": "c:gems/diamond"
-    }
+    "M": "#c:gems/diamond"
   },
   "result": {
     "id": "morebuckets:diamond_bucket"

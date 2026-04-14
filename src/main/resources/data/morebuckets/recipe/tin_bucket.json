@@ -18,9 +18,7 @@
     " M "
   ],
   "key": {
-    "M": {
-      "tag": "c:ingots/tin"
-    }
+    "M": "#c:ingots/tin"
   },
   "result": {
     "id": "morebuckets:tin_bucket"

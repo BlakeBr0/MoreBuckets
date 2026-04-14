@@ -11,9 +11,7 @@
     " M "
   ],
   "key": {
-    "M": {
-      "item": "mysticalagriculture:prudentium_ingot"
-    }
+    "M": "mysticalagriculture:prudentium_ingot"
   },
   "result": {
     "id": "morebuckets:prudentium_bucket"

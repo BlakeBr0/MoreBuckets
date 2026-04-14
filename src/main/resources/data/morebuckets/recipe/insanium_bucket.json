@@ -11,9 +11,7 @@
     " M "
   ],
   "key": {
-    "M": {
-      "item": "mysticalagradditions:insanium_ingot"
-    }
+    "M": "mysticalagradditions:insanium_ingot"
   },
   "result": {
     "id": "morebuckets:insanium_bucket"

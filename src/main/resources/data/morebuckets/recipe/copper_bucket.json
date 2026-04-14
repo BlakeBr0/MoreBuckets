@@ -18,9 +18,7 @@
     " M "
   ],
   "key": {
-    "M": {
-      "tag": "c:ingots/copper"
-    }
+    "M": "#c:ingots/copper"
   },
   "result": {
     "id": "morebuckets:copper_bucket"

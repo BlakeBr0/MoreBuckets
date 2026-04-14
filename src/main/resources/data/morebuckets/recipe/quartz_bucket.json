@@ -11,9 +11,7 @@
     " M "
   ],
   "key": {
-    "M": {
-      "tag": "c:gems/quartz"
-    }
+    "M": "#c:gems/quartz"
   },
   "result": {
     "id": "morebuckets:quartz_bucket"

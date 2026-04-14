@@ -18,9 +18,7 @@
     " M "
   ],
   "key": {
-    "M": {
-      "tag": "c:ingots/aluminum"
-    }
+    "M": "#c:ingots/aluminum"
   },
   "result": {
     "id": "morebuckets:aluminum_bucket"

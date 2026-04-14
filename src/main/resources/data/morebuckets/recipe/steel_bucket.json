@@ -18,9 +18,7 @@
     " M "
   ],
   "key": {
-    "M": {
-      "tag": "c:ingots/steel"
-    }
+    "M": "#c:ingots/steel"
   },
   "result": {
     "id": "morebuckets:steel_bucket"

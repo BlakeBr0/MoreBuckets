@@ -11,9 +11,7 @@
     " M "
   ],
   "key": {
-    "M": {
-      "tag": "c:ingots/gold"
-    }
+    "M": "#c:ingots/gold"
   },
   "result": {
     "id": "morebuckets:golden_bucket"

@@ -11,9 +11,7 @@
     " M "
   ],
   "key": {
-    "M": {
-      "tag": "c:obsidians"
-    }
+    "M": "#c:obsidians"
   },
   "result": {
     "id": "morebuckets:obsidian_bucket"

@@ -18,9 +18,7 @@
     " M "
   ],
   "key": {
-    "M": {
-      "tag": "c:ingots/silver"
-    }
+    "M": "#c:ingots/silver"
   },
   "result": {
     "id": "morebuckets:silver_bucket"

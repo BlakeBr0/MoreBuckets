@@ -18,9 +18,7 @@
     " M "
   ],
   "key": {
-    "M": {
-      "tag": "c:rubber"
-    }
+    "M": "#c:rubber"
   },
   "result": {
     "id": "morebuckets:rubber_bucket"

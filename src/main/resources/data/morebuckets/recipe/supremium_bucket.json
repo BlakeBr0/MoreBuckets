@@ -11,9 +11,7 @@
     " M "
   ],
   "key": {
-    "M": {
-      "item": "mysticalagriculture:supremium_ingot"
-    }
+    "M": "mysticalagriculture:supremium_ingot"
   },
   "result": {
     "id": "morebuckets:supremium_bucket"

@@ -11,9 +11,7 @@
     " M "
   ],
   "key": {
-    "M": {
-      "tag": "c:gems/emerald"
-    }
+    "M": "#c:gems/emerald"
   },
   "result": {
     "id": "morebuckets:emerald_bucket"

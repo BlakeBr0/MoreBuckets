@@ -11,9 +11,7 @@
     " M "
   ],
   "key": {
-    "M": {
-      "item": "mysticalagriculture:tertium_ingot"
-    }
+    "M": "mysticalagriculture:tertium_ingot"
   },
   "result": {
     "id": "morebuckets:tertium_bucket"

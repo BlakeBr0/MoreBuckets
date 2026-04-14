@@ -11,9 +11,7 @@
     " M "
   ],
   "key": {
-    "M": {
-      "item": "mysticalagriculture:imperium_ingot"
-    }
+    "M": "mysticalagriculture:imperium_ingot"
   },
   "result": {
     "id": "morebuckets:imperium_bucket"
